@@ -5,6 +5,8 @@ var Schema = mongoose.Schema;
 
 var bookSchema = new Schema({
   userId: String,
+  thumbnail: String,
+  isCheckedOut: Boolean,
   name: String
 });
 

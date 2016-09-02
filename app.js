@@ -7,7 +7,6 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 var mongoose = require('mongoose');
 var passport = require('passport');
-var async = require('async');
 var moment = require('moment');
 
 var MongoStore = require('connect-mongo')(session);
@@ -17,7 +16,6 @@ require('./server/passport')(passport);
 var app = express();
 
 if (app.get('env') !== 'production') {
-
   // expose node_modules to client app
   app.use(express.static(__dirname + "/node_modules"));
 }
@@ -32,16 +30,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'app')));
 
-var Yelp = require('yelp');
-
-var yelp = new Yelp({
-  consumer_key: '63BCSdCRdfJ1bZupxB5OeA',
-  consumer_secret: 'tJf5idBAYm-sLyeEtaNYojZBaXk',
-  token: 'H2XjHsW_dE0ILIPpqcEQ5HxzdUUfignR',
-  token_secret: 'Sh0M1K0IziMwTBernLlqeKH6kIw'
-});
-
-mongoose.connect('mongodb://admin:admin@ds145405.mlab.com:45405/dlw-nightlife-app'); // Connect to MongoDB database for polling app.  
+mongoose.connect('mongodb://admin:admin@ds019926.mlab.com:19926/fcc-book-trader'); // Connect to MongoDB database for polling app.  
 
 // Make sure mongod is running! If not, log an error and exit. 
 
