@@ -12,9 +12,6 @@ var moment = require('moment');
 
 var MongoStore = require('connect-mongo')(session);
 
-var rsvps = require('./routes/rsvps');
-var users = require('./routes/users');
-
 require('./server/passport')(passport);
 
 var app = express();
@@ -74,60 +71,11 @@ app.get('/auth/twitter/callback',
     res.redirect('/');
   });  
   
-var Rsvp = require('./server/models/rsvp');
-
-  // Endpoint to retrieve local bars from yelp ip. location param passed in is the city you desire results for
-  app.get('/api/yelp-search/:location', function(req, res) {
-    var bars = [];
-    var currentDate = moment().format('MM-DD-YYYY');
-    
-    yelp.search({ term: 'bars', location: req.params.location })
-    .then(function (data) {
-      bars = data.businesses;
-      
-      var barsProcessed = 1;
-      //console.log('Should run ' + bars.length + ' times.');
-      
-      async.forEachLimit(bars, 5, function(bar, callback) {
-        var barId = bar.id;
-        var barRsvps = 0;
-        var currentBar;
-        
-        Rsvp.find({bar: barId, dateAdded: currentDate}, function (err, bar) {
-          if(err) console.log('Err: ', err);
-          currentBar = bar;
-        }).then(function() {         
-          barRsvps = 0;
-          bar.userIsGoing = 0;
-          if(currentBar.length) {
-            barRsvps = currentBar[0].numberAttending;                
-          }
-          bar.totalRSVPs = barRsvps;
-          callback();
-        });
-        
-        if(barsProcessed === bars.length) {
-          // All bars processed. Send back results immediately.
-          res.send(bars);
-        }
-        
-        //console.log('Processed bar: ', barsProcessed);
-        barsProcessed++;
-      }, 
-      function(err) {
-        if (err) console.log(err);
-        res.send(bars);
-      });
-    })
-    .catch(function (err) {
-      console.error(err);
-    });
-    
-  });
-  
+var books = require('./routes/books');
+var users = require('./routes/users');
 
 app.use('/api/user', users);
-app.use('/api/rsvps', rsvps);
+app.use('/api/books', books);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

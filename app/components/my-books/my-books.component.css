@@ -23,19 +23,29 @@ ul {
 }
 
 .flex-container {
-    display: -webkit-flex;
-    display: flex;
-    width: 100%;
-    height: auto;
-    background-color: lightgrey;
-    flex-wrap: wrap;
-    justify-content: center;
+  display: -webkit-flex;
+  display: flex;
+  width: 100%;
+  height: auto;
+  background-color: lightgrey;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .flex-item {
-    background-color: cornflowerblue;
-    width: 100px;
-    height: 100px;
-    margin: 10px;
-    min-width: 100px;
+  background-color: cornflowerblue;
+  width: 100px;
+  height: 100px;
+  margin: 10px;
+  min-width: 100px;
+}
+
+.book-search-results .list-group-item {
+  cursor: pointer;
+}
+
+.book-search-results .list-group-item:hover {
+  color: #fff;
+  background-color: #337ab7;
+  border-color: #337ab7;  
 }

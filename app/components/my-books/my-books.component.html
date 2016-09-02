@@ -1,22 +1,31 @@
 <div class="container">
   <h1 class="text-primary text-center">Your Books</h1>
   
-  <div class="row text-center">
-    <p>
-     Show your books available here.
-    </p>
-  </div>
-  
   <div class="row">
     <form class="form-inline">
       <div class="form-group">
-        <input type="text" class="form-control" id="addBook" placeholder="Add a Book">
+        <input type="text" [(ngModel)]="searchTitle" [ngModelOptions]="{standalone: true}" class="form-control" id="addBook" placeholder="Search">
       </div>
-      <button type="submit" class="btn btn-primary">Add</button>
+      <button (click)="searchForBook()" type="submit" class="btn btn-primary">Search</button>
     </form>  
   </div>
   
   <div class="row">
+    <div class="search-results-title">Search Results</div>
+    <p>Click a book to add it to your collection.</p>
+      
+    <div class="list-group book-search-results">
+      <div *ngFor="let book of searchResults; let i = index;" class="list-group-item" (click)="addBookToCollection(book)">
+        <h4 class="list-group-item-heading">{{ book.title }}</h4>
+        <p class="list-group-item-text">{{ book.authors[0] }}<br>{{ book.description }}</p>
+      </div>
+    </div>      
+  </div>
+  
+  <hr>
+  
+  <div class="row">
+    <div class="current-books-title">Current Books</div>
     <div class="flex-container">
       <div class="flex-item">flex item 1</div>
       <div class="flex-item">flex item 2</div>

@@ -7,10 +7,11 @@ import { routing } from "./routes";
 import { AppComponent }  from './app.component';
 import { HomeComponent } from "./components/home/home.component";
 import { LoginComponent } from './components/login/login.component';
-import { TestComponent } from "./components/test/test.component";
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { AllBooksComponent } from './components/all-books/all-books.component';
 import { MyBooksComponent } from './components/my-books/my-books.component';
+
+import { BooksService } from "./components/services/books.service";
 
 @NgModule({
     imports: [
@@ -19,10 +20,12 @@ import { MyBooksComponent } from './components/my-books/my-books.component';
         JsonpModule,
         routing
     ],
+    providers: [
+        BooksService
+    ],     
     declarations: [
         AppComponent,
         LoginComponent,
-        TestComponent,
         HomeComponent,
         NavbarComponent,
         MyBooksComponent,
