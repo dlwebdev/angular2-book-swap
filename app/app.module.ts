@@ -10,6 +10,7 @@ import { LoginComponent } from './components/login/login.component';
 import { TestComponent } from "./components/test/test.component";
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { AllBooksComponent } from './components/all-books/all-books.component';
+import { MyBooksComponent } from './components/my-books/my-books.component';
 
 @NgModule({
     imports: [
@@ -24,6 +25,7 @@ import { AllBooksComponent } from './components/all-books/all-books.component';
         TestComponent,
         HomeComponent,
         NavbarComponent,
+        MyBooksComponent,
         AllBooksComponent
     ],
     bootstrap: [ AppComponent ]

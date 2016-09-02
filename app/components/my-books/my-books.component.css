@@ -1,0 +1,41 @@
+:host {
+  display: block;
+  padding: 0 16px;
+}
+
+input {
+  width: 100%;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0 0 0 8px;
+}
+
+.rounded-input {
+  border-radius: 5px;
+  height: 34px;
+  padding-left: 10px;
+}
+
+.loading-container {
+  margin-top: 25px;  
+}
+
+.flex-container {
+    display: -webkit-flex;
+    display: flex;
+    width: 100%;
+    height: auto;
+    background-color: lightgrey;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.flex-item {
+    background-color: cornflowerblue;
+    width: 100px;
+    height: 100px;
+    margin: 10px;
+    min-width: 100px;
+}
