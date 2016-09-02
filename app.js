@@ -40,9 +40,6 @@ mongoose.connection.on('error', function() {
   process.exit(1);
 });
 
-
-var User = require('./server/models/user');
-
 app.use(session({ 
   secret: 'my_precious_l@3', 
   cookie: { maxAge: 600000 }, // 1 hour session
@@ -59,25 +56,6 @@ app.post('/login',
   function(req, res) {
     res.redirect('/');
   }); 
-  
-app.post('/register', function(req, res, next) {
-  console.log("Registering User: ", req.body);
-  
-    User.register(new User({ username : req.body.username }), req.body.password, function(err, account) {
-        if (err) {
-          return res.render('register', { error : err.message });
-        }
-
-        passport.authenticate('local')(req, res, function () {
-            req.session.save(function (err) {
-                if (err) {
-                    return next(err);
-                }
-                res.redirect('/');
-            });
-        });
-    });
-});  
   
 var books = require('./routes/books');
 var users = require('./routes/users');

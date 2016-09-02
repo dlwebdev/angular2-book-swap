@@ -24,7 +24,7 @@ export class UsersService {
 
     console.log("Service passing along user: ", user);
 
-    return this.http.post('/register', JSON.stringify(user), {
+    return this.http.post('/api/user/register', JSON.stringify(user), {
       headers: headers
     }).map((res) => res.json());
   }   
