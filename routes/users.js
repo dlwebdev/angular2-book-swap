@@ -1,28 +1,27 @@
 var express = require('express');
 var router = express.Router();
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.json({
-    name: "John",
-    last: "Smith"
+// Define routes.
+router.get('/',
+  function(req, res) {
+    res.render('home', { user: req.user });
   });
-});
 
-router.get('/authenticated', function(req, res, next) {
-  var authed = false;
-  if (req.isAuthenticated()) {
-    authed = true;
-  }
-  res.json({'authenticated': authed});
-});    
-    
-router.get('/get-id-of-logged-in', function(req, res, next) {
-  if (req.isAuthenticated()) {
-    res.json({'user': req.user});
-  } else {
-    res.json({'userId': '-1'});
-  }
-}); 
+router.get('/login',
+  function(req, res){
+    res.render('login');
+  });
+  
+router.get('/logout',
+  function(req, res){
+    req.logout();
+    res.redirect('/');
+  });
+
+router.get('/profile',
+  require('connect-ensure-login').ensureLoggedIn(),
+  function(req, res){
+    res.render('profile', { user: req.user });
+  });
 
 module.exports = router;
