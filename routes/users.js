@@ -25,15 +25,15 @@ router.post('/register', function(req, res) {
     else {
       //console.log("Account doesn't exist. Go ahead and create it.");
       
-      var user = new User({
+      var user2 = new User({
         username: req.body.username,
         password: req.body.password
       });
 
       // save our user into the database
-      user.save(function(err) {
+      user2.save(function(err) {
         if (err) throw err;
-        res.redirect('/');
+        res.redirect('/login');
       });      
     }
 
@@ -43,7 +43,8 @@ router.post('/register', function(req, res) {
 
 router.get('/login',
   function(req, res){
-    res.render('login');
+    console.log("LOGIN ROUTE!!");
+    //res.render('login');
   });
   
 router.get('/logout',

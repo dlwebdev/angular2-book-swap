@@ -51,11 +51,23 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());   
   
-app.post('/login', 
-  passport.authenticate('local', { failureRedirect: '/login' }),
-  function(req, res) {
-    res.redirect('/');
-  }); 
+app.post('/login',
+  passport.authenticate('local', {
+    successRedirect: '/loginSuccess',
+    failureRedirect: '/loginFailure'
+  })
+);
+
+app.get('/loginFailure', function(req, res, next) {
+  res.send('Failed to authenticate');
+});
+
+app.get('/loginSuccess', function(req, res, next) {
+  //res.send('Successfully authenticated');
+  res.json(req.user);
+});
+
+
   
 var books = require('./routes/books');
 var users = require('./routes/users');

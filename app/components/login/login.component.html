@@ -1,17 +1,17 @@
 <div class="container">
   <h1>Log In</h1>
   
-  <form action="/login" method="post">
+  <form>
     <div class="form-group">
       <label for="userEmail">Email address</label>
-      <input type="email" class="form-control" id="userEmail" placeholder="Email">
+      <input [(ngModel)]="user.username" [ngModelOptions]="{standalone: true}" type="email" class="form-control" id="userEmail" placeholder="Email">
     </div>
     <div class="form-group">
       <label for="userPassword">Password</label>
-      <input type="password" class="form-control" id="userPassword" placeholder="Password">
+      <input [(ngModel)]="user.password" [ngModelOptions]="{standalone: true}" type="password" class="form-control" id="userPassword" placeholder="Password">
     </div>
 
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <button (click)="loginUser()" type="button" class="btn btn-primary">Submit</button>
   </form>
   
 </div>

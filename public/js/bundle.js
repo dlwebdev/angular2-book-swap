@@ -16565,7 +16565,7 @@ $__System.registerDynamic("8", ["3", "e", "7"], true, function ($__require, expo
 
     return module.exports;
 });
-$__System.registerDynamic("9", ["3", "e"], true, function ($__require, exports, module) {
+$__System.registerDynamic("9", ["3", "e", "f"], true, function ($__require, exports, module) {
     "use strict";
 
     var define,
@@ -16583,18 +16583,35 @@ $__System.registerDynamic("9", ["3", "e"], true, function ($__require, exports, 
     };
     var core_1 = $__require("3");
     var forms_1 = $__require("e");
-    //import './rxjs-operators';
+    var users_service_1 = $__require("f");
     var LoginComponent = function () {
-        function LoginComponent() {}
+        function LoginComponent(usersService) {
+            this.usersService = usersService;
+            this.user = {};
+            this.user = {
+                username: '',
+                password: ''
+            };
+        }
         LoginComponent.prototype.ngOnInit = function () {
             console.log("Initializing login component");
+        };
+        LoginComponent.prototype.loginUser = function () {
+            var _this = this;
+            console.log("Logging in user: ", this.user);
+            this.usersService.loginUser(this.user).subscribe(function (user) {
+                console.log("Value returned from login post: ", user);
+                _this.user = user;
+            }, function (error) {
+                return _this.errorMessage = error;
+            });
         };
         LoginComponent = __decorate([core_1.Component({
             selector: 'my-login',
             templateUrl: 'components/login/login.component.html',
             styleUrls: ['components/login/login.component.css'],
             directives: [forms_1.FORM_DIRECTIVES]
-        }), __metadata('design:paramtypes', [])], LoginComponent);
+        }), __metadata('design:paramtypes', [users_service_1.UsersService])], LoginComponent);
         return LoginComponent;
     }();
     exports.LoginComponent = LoginComponent;
@@ -25430,6 +25447,16 @@ $__System.registerDynamic("f", ["3", "47", "14", "41", "42", "43"], true, functi
                 'Content-Type': 'application/json' });
             console.log("Service passing along user: ", user);
             return this.http.post('/api/user/register', JSON.stringify(user), {
+                headers: headers
+            }).map(function (res) {
+                return res.json();
+            });
+        };
+        UsersService.prototype.loginUser = function (user) {
+            var headers = new http_1.Headers({
+                'Content-Type': 'application/json' });
+            console.log("Logging in user: ", user);
+            return this.http.post('/login', JSON.stringify(user), {
                 headers: headers
             }).map(function (res) {
                 return res.json();

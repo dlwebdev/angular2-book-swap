@@ -27,7 +27,18 @@ export class UsersService {
     return this.http.post('/api/user/register', JSON.stringify(user), {
       headers: headers
     }).map((res) => res.json());
-  }   
+  } 
+
+  loginUser(user:Object): Observable<string[]> {
+    let headers = new Headers({
+      'Content-Type': 'application/json'});
+
+    console.log("Logging in user: ", user);
+
+    return this.http.post('/login', JSON.stringify(user), {
+      headers: headers
+    }).map((res) => res.json());
+  }  
 
   /**
     * Handle HTTP error

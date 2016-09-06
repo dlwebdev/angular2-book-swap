@@ -29,13 +29,23 @@ module.exports = function(passport) {
         User.findOne({ username: username }, function (err, user) {
           console.log("Finding user in LocalStrategy...");
           
-          if (err) { return done(err); }
-          if (!user) { 
-              console.log("NO USER FOUND. CREATE ONE HERE IF THEY ARE REGISTERING.");
-              return done(null, false); 
+          console.log("user.password: ", user.password);
+          console.log("password: ", password);
+          
+          if (err) {
+            return done(err);
           }
-          if (!user.verifyPassword(password)) { return done(null, false); }
-          return done(null, user);
+    
+          if (!user) {
+            return done(null, false);
+          }
+    
+          if (user.password !== password) {
+            return done(null, false);
+          }
+    
+          return done(null, user);         
+          
         });
         
       }
