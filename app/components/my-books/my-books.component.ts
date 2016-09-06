@@ -88,6 +88,7 @@ export class MyBooksComponent implements OnInit {
               res => {
                 this.usersCurrentBooks.push(res);
                 this.searchResults = [];
+                this.searchTitle = '';
               },
               error =>  this.errorMessage = <any>error
             );         

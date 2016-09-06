@@ -25463,6 +25463,7 @@ $__System.registerDynamic("c", ["3", "e", "7", "f", "46"], true, function ($__re
             console.log("Will add this book to your collection: ", bookToAdd);
             this.booksService.addBookToUsersCollection(bookToAdd).subscribe(function (res) {
                 _this.usersCurrentBooks.push(res);
+                _this.searchResults = [];
             }, function (error) {
                 return _this.errorMessage = error;
             });
