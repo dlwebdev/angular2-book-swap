@@ -87,6 +87,7 @@ export class MyBooksComponent implements OnInit {
             .subscribe(
               res => {
                 this.usersCurrentBooks.push(res);
+                this.searchResults = [];
               },
               error =>  this.errorMessage = <any>error
             );         
