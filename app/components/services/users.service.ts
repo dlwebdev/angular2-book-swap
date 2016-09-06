@@ -40,6 +40,12 @@ export class UsersService {
     }).map((res) => res.json());
   }  
 
+  getCurrentUser(): Observable<Object[]> {
+    return this.http.get('/api/user/current-user')
+                    .map((res: Response) => res.json())
+                    .catch(this.handleError);
+  } 
+
   /**
     * Handle HTTP error
   */

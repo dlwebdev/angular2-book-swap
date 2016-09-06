@@ -10,6 +10,10 @@
       <label for="userPassword">Password</label>
       <input [(ngModel)]="user.password" [ngModelOptions]="{standalone: true}" type="password" class="form-control" id="userPassword" placeholder="Password">
     </div>
+    
+    <div *ngIf="loginFailureMessage" class="form-group">
+      <p>{{ loginFailureMessage }}</p>
+    </div>
 
     <button (click)="loginUser()" type="button" class="btn btn-primary">Submit</button>
   </form>

@@ -10,6 +10,19 @@ router.get('/',
   }
 );
 
+router.get('/current-user', function(req, res, next) {
+  if (req.isAuthenticated()) {
+    User.find({'_id': req.user._id}, function (err, user) {
+      if(err) console.log('Err: ', err);
+      console.log("Current user: ", user);
+      res.json(user[0]);
+    });    
+  } 
+  else {
+    res.json({'user': ''});
+  }
+});
+
 router.post('/register', function(req, res) {
   console.log("Registering User: ", req.body);
   
