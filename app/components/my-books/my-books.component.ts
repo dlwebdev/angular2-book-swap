@@ -15,15 +15,13 @@ export class MyBooksComponent implements OnInit {
     searchTitle: string = '';
     searchResults: any = [];
     
+    usersCurrentBooks: any = [];
+    
     constructor(private booksService: BooksService, private usersService: UsersService, private router: Router) {
         console.log("GETTING USERS!");
     }
-    
-    /**
-    * Get the names OnInit
-    */
+
     ngOnInit() {
-        console.log("Initializing my books component");
         this.checkIfLoggedIn();
     }    
     
@@ -37,6 +35,7 @@ export class MyBooksComponent implements OnInit {
                     
                     if(this.user._id) {
                       console.log("Logged in, show books");
+                      this.getUsersBooks();
                     }
                     else {
                       console.log("No User returned.");
@@ -60,7 +59,36 @@ export class MyBooksComponent implements OnInit {
             );        
     }
     
+    getUsersBooks() {
+        console.log("Get all of the users current books.");
+        
+        this.booksService.getUsersBooks(this.user._id)
+            .subscribe(
+              books => {
+                console.log("Users Books: ", books);
+                this.usersCurrentBooks = books;
+              },
+              error =>  this.errorMessage = <any>error
+            );          
+    }
+    
     addBookToCollection(book:object) {
-        console.log("Will add this book to your collection: ", book);
+
+        let bookToAdd = {
+            userId: this.user._id,
+            thumbnail: book.thumbnail,
+            name: book.title,
+            isCheckedOut: false
+        };    
+        
+        console.log("Will add this book to your collection: ", bookToAdd);
+        
+        this.booksService.addBookToUsersCollection(bookToAdd)
+            .subscribe(
+              res => {
+                this.usersCurrentBooks.push(res);
+              },
+              error =>  this.errorMessage = <any>error
+            );         
     }
 }

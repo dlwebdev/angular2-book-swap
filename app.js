@@ -59,7 +59,7 @@ app.post('/login',
 );
 
 app.get('/loginFailure', function(req, res, next) {
-  res.send('Failed to authenticate');
+  res.json({});
 });
 
 app.get('/loginSuccess', function(req, res, next) {

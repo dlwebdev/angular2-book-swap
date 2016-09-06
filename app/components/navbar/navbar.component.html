@@ -18,23 +18,22 @@
         <!--<li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>-->
         <li><a [routerLink]="['/']">HOME</a></li>
         <li><a [routerLink]="['/all-books']">ALL BOOKS</a></li>
-        <li><a [routerLink]="['/my-books']">MY BOOKS</a></li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
         <li *ngIf="!userLoggedIn">
           <a [routerLink]="['login']">Login</a>
         </li>
-        <li *ngIf="userLoggedIn" class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Your Account <span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a [routerLink]="['manage/account']">Settings</a></li>
-            <li><a [routerLink]="['manage/friends']">Friends</a></li>
-            <li role="separator" class="divider"></li>
-            <li><a [routerLink]="['logout']">Logout</a></li>
-          </ul>
-        </li>      
+        
+        <li *ngIf="userLoggedIn">
+          <a [routerLink]="['/my-books']">MY BOOKS</a>
+        </li>
+        <li *ngIf="userLoggedIn">
+          <a href="/api/user/logout">LOGOUT</a>
+        </li>        
+        
       </ul>
+      
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>

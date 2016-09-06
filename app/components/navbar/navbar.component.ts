@@ -1,7 +1,7 @@
 import { Component, OnInit, ngAfterViewInit } from '@angular/core';
 import { ROUTER_DIRECTIVES } from '@angular/router';
 
-//import { AuthService } from "../services/auth.service";
+import { UsersService } from "../services/users.service";
 
 @Component({
   selector: 'my-navbar',
@@ -14,11 +14,28 @@ export class NavbarComponent implements OnInit {
     userLoggedIn: boolean = false;
     errorMessage: string;
 
-    constructor() { }	
+    constructor(private usersService: UsersService) { }	
 
     ngOnInit() {
-        //this.setLoggedInStatus();
-    }
+      this.checkIfLoggedIn();
+    } 
+    
+    checkIfLoggedIn() {
+      // If the user is logged in it will return the user object, otherwise will redirect to login
+      this.usersService.getCurrentUser()
+            .subscribe(
+                user => {
+                    //console.log('Current User response: ', user);
+                    this.user = user;
+                    
+                    if(this.user._id) {
+                      console.log("Logged in, show books");
+                      this.userLoggedIn = true;
+                    }
+                },
+                error =>  this.errorMessage = <any>error
+            );      
+    }     
     
     setLoggedInStatus() {
         console.log("Get logged in status so we know whether or not to show My Books section, etc.");

@@ -11,7 +11,7 @@
       <input [(ngModel)]="user.password" [ngModelOptions]="{standalone: true}" type="password" class="form-control" id="userPassword" placeholder="Password">
     </div>
     
-    <div *ngIf="loginFailureMessage" class="form-group">
+    <div *ngIf="loginFailureMessage" class="form-group login-failure">
       <p>{{ loginFailureMessage }}</p>
     </div>
 

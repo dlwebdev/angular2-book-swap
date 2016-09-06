@@ -4,6 +4,9 @@
 var LocalStrategy = require('passport-local').Strategy;
 var RegisterStrategy = require('passport-local-register');
 
+var bcrypt = require('bcrypt');
+var saltRounds = 10;
+
 var User = require('./models/user');
 
 // load the auth variables
@@ -27,25 +30,21 @@ module.exports = function(passport) {
       function(username, password, done) {
         
         User.findOne({ username: username }, function (err, user) {
-          console.log("Finding user in LocalStrategy...");
+          //console.log("user.password: ", user.password);
+          //console.log("password: ", password);
           
-          console.log("user.password: ", user.password);
-          console.log("password: ", password);
-          
-          if (err) {
-            return done(err);
-          }
+          if (err) return done(err);
+          if (!user) return done(null, false);
     
-          if (!user) {
-            return done(null, false);
-          }
-    
-          if (user.password !== password) {
-            return done(null, false);
-          }
-    
-          return done(null, user);         
-          
+          bcrypt.compare(password, user.password, function(err, res) {
+            if(err) console.log('Err: ', err);
+            
+            console.log("UNHASHED PASS CHECK (Should be TRUE): ", res);
+              
+            if (!res) return done(null, false);
+            return done(null, user);                
+          });    
+
         });
         
       }

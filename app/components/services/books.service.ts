@@ -23,6 +23,21 @@ export class BooksService {
                 .map((res: Response) => res.json())
                 .catch(this.handleError);     
   } 
+  
+  getUsersBooks(userId:string): Observable<Object[]> {
+    return this.http.get('/api/books/user/' + userId)
+                .map((res: Response) => res.json())
+                .catch(this.handleError);     
+  }   
+
+  addBookToUsersCollection(book:Object): Observable<string[]> {
+    let headers = new Headers({
+      'Content-Type': 'application/json'});
+
+    return this.http.post('/api/books/', JSON.stringify(book), {
+      headers: headers
+    }).map((res) => res.json());
+  }   
 
   /**
     * Handle HTTP error

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FORM_DIRECTIVES } from '@angular/forms';
 import { Router, ActivatedRoute, ROUTER_DIRECTIVES } from '@angular/router';
 
@@ -10,7 +10,7 @@ import { UsersService } from "../services/users.service";
     styleUrls: ['components/login/login.component.css'],
     directives: [FORM_DIRECTIVES, ROUTER_DIRECTIVES]
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
     user: object = {};
     loginFailureMessage: string = '';
     
@@ -20,18 +20,11 @@ export class LoginComponent implements OnInit {
             password: ''
         };         
     }
-
-    ngOnInit() {
-        console.log("Initializing login component");
-    }    
     
     loginUser() {
-        console.log("Logging in user: ", this.user);
-        
         this.usersService.loginUser(this.user)
             .subscribe(
               user => {
-                console.log("Value returned from login post: ", user);
                 this.user = user;
                 
                 if(!this.user._id) {

@@ -16596,14 +16596,9 @@ $__System.registerDynamic("9", ["3", "e", "7", "f"], true, function ($__require,
                 password: ''
             };
         }
-        LoginComponent.prototype.ngOnInit = function () {
-            console.log("Initializing login component");
-        };
         LoginComponent.prototype.loginUser = function () {
             var _this = this;
-            console.log("Logging in user: ", this.user);
             this.usersService.loginUser(this.user).subscribe(function (user) {
-                console.log("Value returned from login post: ", user);
                 _this.user = user;
                 if (!_this.user._id) {
                     // show error message, could not log you in.
@@ -16629,7 +16624,7 @@ $__System.registerDynamic("9", ["3", "e", "7", "f"], true, function ($__require,
 
     return module.exports;
 });
-$__System.registerDynamic("a", ["3", "e", "f"], true, function ($__require, exports, module) {
+$__System.registerDynamic("a", ["3", "e", "7", "f"], true, function ($__require, exports, module) {
     "use strict";
 
     var define,
@@ -16647,11 +16642,15 @@ $__System.registerDynamic("a", ["3", "e", "f"], true, function ($__require, expo
     };
     var core_1 = $__require("3");
     var forms_1 = $__require("e");
+    var router_1 = $__require("7");
     var users_service_1 = $__require("f");
     var RegisterComponent = function () {
-        function RegisterComponent(usersService) {
+        function RegisterComponent(usersService, router) {
             this.usersService = usersService;
+            this.router = router;
             this.user = {};
+            this.regStatus = {};
+            this.registerFailureMessage = '';
             this.user = {
                 username: '',
                 password: ''
@@ -16662,8 +16661,14 @@ $__System.registerDynamic("a", ["3", "e", "f"], true, function ($__require, expo
         };
         RegisterComponent.prototype.registerUser = function () {
             var _this = this;
-            this.usersService.registerUser(this.user).subscribe(function (user) {
-                _this.user = user;
+            this.usersService.registerUser(this.user).subscribe(function (res) {
+                _this.regStatus = res.registered;
+                if (res.registered) {
+                    // redirect to my-books
+                    _this.router.navigate(['/my-books']);
+                } else {
+                    _this.registerFailureMessage = "Error registering";
+                }
             }, function (error) {
                 return _this.errorMessage = error;
             });
@@ -16672,8 +16677,8 @@ $__System.registerDynamic("a", ["3", "e", "f"], true, function ($__require, expo
             selector: 'my-register',
             templateUrl: 'components/register/register.component.html',
             styleUrls: ['components/register/register.component.css'],
-            directives: [forms_1.FORM_DIRECTIVES]
-        }), __metadata('design:paramtypes', [users_service_1.UsersService])], RegisterComponent);
+            directives: [forms_1.FORM_DIRECTIVES, router_1.ROUTER_DIRECTIVES]
+        }), __metadata('design:paramtypes', [users_service_1.UsersService, router_1.Router])], RegisterComponent);
         return RegisterComponent;
     }();
     exports.RegisterComponent = RegisterComponent;
@@ -16681,7 +16686,7 @@ $__System.registerDynamic("a", ["3", "e", "f"], true, function ($__require, expo
 
     return module.exports;
 });
-$__System.registerDynamic("10", ["3", "7"], true, function ($__require, exports, module) {
+$__System.registerDynamic("10", ["3", "7", "f"], true, function ($__require, exports, module) {
     "use strict";
 
     var define,
@@ -16699,14 +16704,29 @@ $__System.registerDynamic("10", ["3", "7"], true, function ($__require, exports,
     };
     var core_1 = $__require("3");
     var router_1 = $__require("7");
-    //import { AuthService } from "../services/auth.service";
+    var users_service_1 = $__require("f");
     var NavbarComponent = function () {
-        function NavbarComponent() {
+        function NavbarComponent(usersService) {
+            this.usersService = usersService;
             this.user = '';
             this.userLoggedIn = false;
         }
         NavbarComponent.prototype.ngOnInit = function () {
-            //this.setLoggedInStatus();
+            this.checkIfLoggedIn();
+        };
+        NavbarComponent.prototype.checkIfLoggedIn = function () {
+            var _this = this;
+            // If the user is logged in it will return the user object, otherwise will redirect to login
+            this.usersService.getCurrentUser().subscribe(function (user) {
+                //console.log('Current User response: ', user);
+                _this.user = user;
+                if (_this.user._id) {
+                    console.log("Logged in, show books");
+                    _this.userLoggedIn = true;
+                }
+            }, function (error) {
+                return _this.errorMessage = error;
+            });
         };
         NavbarComponent.prototype.setLoggedInStatus = function () {
             console.log("Get logged in status so we know whether or not to show My Books section, etc.");
@@ -16716,7 +16736,7 @@ $__System.registerDynamic("10", ["3", "7"], true, function ($__require, exports,
             templateUrl: 'components/navbar/navbar.component.html',
             styleUrls: ['components/navbar/navbar.component.css'],
             directives: [router_1.ROUTER_DIRECTIVES]
-        }), __metadata('design:paramtypes', [])], NavbarComponent);
+        }), __metadata('design:paramtypes', [users_service_1.UsersService])], NavbarComponent);
         return NavbarComponent;
     }();
     exports.NavbarComponent = NavbarComponent;
@@ -25389,13 +25409,10 @@ $__System.registerDynamic("c", ["3", "e", "7", "f", "46"], true, function ($__re
             this.router = router;
             this.searchTitle = '';
             this.searchResults = [];
+            this.usersCurrentBooks = [];
             console.log("GETTING USERS!");
         }
-        /**
-        * Get the names OnInit
-        */
         MyBooksComponent.prototype.ngOnInit = function () {
-            console.log("Initializing my books component");
             this.checkIfLoggedIn();
         };
         MyBooksComponent.prototype.checkIfLoggedIn = function () {
@@ -25406,6 +25423,7 @@ $__System.registerDynamic("c", ["3", "e", "7", "f", "46"], true, function ($__re
                 _this.user = user;
                 if (_this.user._id) {
                     console.log("Logged in, show books");
+                    _this.getUsersBooks();
                 } else {
                     console.log("No User returned.");
                     _this.router.navigate(['/login']);
@@ -25424,8 +25442,31 @@ $__System.registerDynamic("c", ["3", "e", "7", "f", "46"], true, function ($__re
                 return _this.errorMessage = error;
             });
         };
+        MyBooksComponent.prototype.getUsersBooks = function () {
+            var _this = this;
+            console.log("Get all of the users current books.");
+            this.booksService.getUsersBooks(this.user._id).subscribe(function (books) {
+                console.log("Users Books: ", books);
+                _this.usersCurrentBooks = books;
+            }, function (error) {
+                return _this.errorMessage = error;
+            });
+        };
         MyBooksComponent.prototype.addBookToCollection = function (book) {
-            console.log("Will add this book to your collection: ", book);
+            var _this = this;
+            var bookToAdd = {
+                userId: this.user._id,
+                thumbnail: book.thumbnail,
+                name: book.title,
+                isCheckedOut: false
+            };
+            console.log("Will add this book to your collection: ", bookToAdd);
+            this.booksService.addBookToUsersCollection(bookToAdd).subscribe(function (res) {
+                console.log("Results: ", res);
+                //this.searchResults = books;
+            }, function (error) {
+                return _this.errorMessage = error;
+            });
         };
         MyBooksComponent = __decorate([core_1.Component({
             selector: 'my-my-books',
@@ -45525,6 +45566,20 @@ $__System.registerDynamic("46", ["3", "47", "12", "43", "44", "45"], true, funct
             return this.http.get('/api/books/search/' + term).map(function (res) {
                 return res.json();
             }).catch(this.handleError);
+        };
+        BooksService.prototype.getUsersBooks = function (userId) {
+            return this.http.get('/api/books/user/' + userId).map(function (res) {
+                return res.json();
+            }).catch(this.handleError);
+        };
+        BooksService.prototype.addBookToUsersCollection = function (book) {
+            var headers = new http_1.Headers({
+                'Content-Type': 'application/json' });
+            return this.http.post('/api/books/', JSON.stringify(book), {
+                headers: headers
+            }).map(function (res) {
+                return res.json();
+            });
         };
         /**
           * Handle HTTP error

@@ -1,6 +1,9 @@
 var express = require('express');
 var router = express.Router();
 
+var bcrypt = require('bcrypt');
+var saltRounds = 10;
+
 var User = require('../server/models/user');
 
 // Define routes.
@@ -14,8 +17,7 @@ router.get('/current-user', function(req, res, next) {
   if (req.isAuthenticated()) {
     User.find({'_id': req.user._id}, function (err, user) {
       if(err) console.log('Err: ', err);
-      console.log("Current user: ", user);
-      res.json(user[0]);
+      res.json({"_id": user[0]._id,"username": user[0].username});
     });    
   } 
   else {
@@ -38,16 +40,30 @@ router.post('/register', function(req, res) {
     else {
       //console.log("Account doesn't exist. Go ahead and create it.");
       
-      var user2 = new User({
-        username: req.body.username,
-        password: req.body.password
-      });
-
-      // save our user into the database
-      user2.save(function(err) {
-        if (err) throw err;
-        res.redirect('/login');
+      var myPlaintextPassword = req.body.password;
+      
+      bcrypt.hash(myPlaintextPassword, saltRounds, function(err, hash) {
+        if(err) console.log('Err: ', err);
+        
+        // Store hash in your password DB. 
+        
+        //console.log("Plain Text Password: ", myPlaintextPassword);
+        //console.log("Hashed Password: ", hash);
+            
+        // Store hash in your password DB.
+        var user2 = new User({
+          username: req.body.username,
+          password: hash
+        });
+        
+        // save our user into the database
+        user2.save(function(err) {
+          if (err) throw err;
+          res.json({"registered": "true"});
+        }); 
+        
       });      
+      
     }
 
   });  
