@@ -17,9 +17,7 @@ export class MyBooksComponent implements OnInit {
     
     usersCurrentBooks: any = [];
     
-    constructor(private booksService: BooksService, private usersService: UsersService, private router: Router) {
-        console.log("GETTING USERS!");
-    }
+    constructor(private booksService: BooksService, private usersService: UsersService, private router: Router) { }
 
     ngOnInit() {
         this.checkIfLoggedIn();
@@ -30,15 +28,12 @@ export class MyBooksComponent implements OnInit {
       this.usersService.getCurrentUser()
             .subscribe(
                 user => {
-                    //console.log('Current User response: ', user);
                     this.user = user;
                     
                     if(this.user._id) {
-                      console.log("Logged in, show books");
                       this.getUsersBooks();
                     }
                     else {
-                      console.log("No User returned.");
                       this.router.navigate(['/login']);
                     }
                 },
@@ -47,12 +42,9 @@ export class MyBooksComponent implements OnInit {
     }    
     
     searchForBook() {
-        console.log("Searching for: ", this.searchTitle);
-        
         this.booksService.searchForBooks(this.searchTitle)
             .subscribe(
               books => {
-                console.log("Books: ", books);
                 this.searchResults = books;
               },
               error =>  this.errorMessage = <any>error
@@ -60,12 +52,9 @@ export class MyBooksComponent implements OnInit {
     }
     
     getUsersBooks() {
-        console.log("Get all of the users current books.");
-        
         this.booksService.getUsersBooks(this.user._id)
             .subscribe(
               books => {
-                console.log("Users Books: ", books);
                 this.usersCurrentBooks = books;
               },
               error =>  this.errorMessage = <any>error
@@ -80,8 +69,6 @@ export class MyBooksComponent implements OnInit {
             name: book.title,
             isCheckedOut: false
         };    
-        
-        console.log("Will add this book to your collection: ", bookToAdd);
         
         this.booksService.addBookToUsersCollection(bookToAdd)
             .subscribe(
