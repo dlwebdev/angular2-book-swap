@@ -11,18 +11,11 @@ import 'rxjs/add/operator/toPromise';
 @Injectable()
 export class UsersService {
   
-  /**
-   * Creates a new UsersService with the injected Http.
-   * @param {Http} http - The injected Http.
-   * @constructor
-  */  
   constructor(private http: Http, private jsonp:Jsonp) {}
 
   registerUser(user:Object): Observable<string[]> {
     let headers = new Headers({
       'Content-Type': 'application/json'});
-
-    console.log("Service passing along user: ", user);
 
     return this.http.post('/api/user/register', JSON.stringify(user), {
       headers: headers
@@ -32,8 +25,6 @@ export class UsersService {
   loginUser(user:Object): Observable<string[]> {
     let headers = new Headers({
       'Content-Type': 'application/json'});
-
-    console.log("Logging in user: ", user);
 
     return this.http.post('/login', JSON.stringify(user), {
       headers: headers

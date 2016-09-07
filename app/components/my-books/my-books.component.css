@@ -1,6 +1,7 @@
 :host {
   display: block;
-  padding: 0 16px;
+  padding: 0 15px;
+  margin-top: 65px;
 }
 
 input {

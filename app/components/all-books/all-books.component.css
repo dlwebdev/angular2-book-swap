@@ -35,7 +35,25 @@ ul {
 }
 
 .flex-item {
-  background-color: cornflowerblue;
+  background-color: #fff;
   margin: 10px;
   min-width: 100px;
+  vertical-align: middle;
+  position: relative;  
+}
+
+.flex-item .request {
+  float: none;
+  vertical-align: top;
+  margin-left: -20px;
+  color: #dc143c;
+  opacity: .7;
+  position: absolute;
+  top: 0;
+  right: 10px;
+  z-index: 1000;
+} 
+
+.glyphicon-random {
+  color: #dc143c;
 }
