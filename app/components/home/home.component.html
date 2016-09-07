@@ -1,6 +1,37 @@
-<div class="container">
-  <h1 class="text-primary text-center">Home</h1>
-  <p>
-      <a [routerLink]="['/register']">Create Account</a>
-  </p>
+<div class="jumbotron">
+  <div class="container text-center">
+    <h1>Book Exchange</h1>
+    
+    <p>Exchange books among friends and make some new ones in the process.</p>
+
+    <div class="btn-group btn-group-lg" role="group" aria-label="...">
+      <div class="btn-group" role="group">
+        <a [routerLink]="['/login']" role="button" class="btn btn-primary btn-lg">Login</a>
+      </div>      
+      <div class="btn-group" role="group">
+        <a [routerLink]="['/register']" role="button" class="btn btn-success btn-lg">Register</a>
+      </div>
+    </div>
+
+  </div>
 </div>
+
+<div class="container">
+  
+      <div class="row">
+        
+        <div class="col-md-6 text-center">
+          <h2>View Books</h2>
+          <p>View all books owned by all users and propose new trades.</p>
+          <p><a class="btn btn-default" [routerLink]="['/all-books']" role="button">All Books &raquo;</a></p>
+        </div>
+        
+        <div class="col-md-6 text-center">
+          <h2>Manage Your Books</h2>
+          <p>Add or remove books from your collection.</p>
+          <p><a class="btn btn-default" [routerLink]="['/my-books']" role="button">Your Books &raquo;</a></p>
+        </div>
+        
+      </div>
+      
+</div>      

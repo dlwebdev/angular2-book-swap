@@ -1,6 +1,5 @@
-:host {
-  display: block;
-  padding: 0 16px;
+.jumbotron {
+  margin-top: 25px;
 }
 
 input {
