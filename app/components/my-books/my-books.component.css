@@ -26,16 +26,26 @@ ul {
   display: -webkit-flex;
   display: flex;
   width: 100%;
-  height: auto;
-  background-color: lightgrey;
+  max-height: auto;
+  vertical-align: middle;
+  border: 2px solid lightgrey;
   flex-wrap: wrap;
   justify-content: center;
+  border-radius: 15px;
+  background: #fff;
 }
 
 .flex-item {
-  background-color: cornflowerblue;
+  background-color: #fff;
   margin: 10px;
   min-width: 100px;
+  vertical-align: middle;
+  position: relative;
+}
+
+.flex-item img {
+  width: 128px;
+  height: 192px;
 }
 
 .book-search-results .list-group-item {
@@ -47,3 +57,15 @@ ul {
   background-color: #337ab7;
   border-color: #337ab7;  
 }
+
+.flex-item .close {
+  float: none;
+  vertical-align: top;
+  margin-left: -20px;
+  color: #dc143c;
+  opacity: .7;
+  position: absolute;
+  top: 0;
+  right: 10px;
+  z-index: 1000;
+}    

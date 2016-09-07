@@ -1,6 +1,7 @@
 :host {
   display: block;
   padding: 0 16px;
+  margin-top: 75px;
 }
 
 input {
@@ -27,9 +28,10 @@ ul {
   display: flex;
   width: 100%;
   height: auto;
-  background-color: lightgrey;
+  border: 2px solid lightgrey;
   flex-wrap: wrap;
   justify-content: center;
+  border-radius: 15px;
 }
 
 .flex-item {

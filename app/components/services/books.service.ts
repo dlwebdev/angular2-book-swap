@@ -44,6 +44,12 @@ export class BooksService {
       headers: headers
     }).map((res) => res.json());
   }   
+  
+  deleteBook(id:string): Observable<string[]> {
+    return this.http.delete('/api/books/' + id)
+                    .map((res: Response) => res.json())
+                    .catch(this.handleError);
+  }    
 
   /**
     * Handle HTTP error

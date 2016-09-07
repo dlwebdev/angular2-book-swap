@@ -25467,6 +25467,16 @@ $__System.registerDynamic("c", ["3", "e", "7", "f", "11"], true, function ($__re
                 return _this.errorMessage = error;
             });
         };
+        MyBooksComponent.prototype.deleteBook = function (book) {
+            var _this = this;
+            console.log("Will remove this book from users collection: ", book);
+            this.booksService.deleteBook(book._id).subscribe(function (res) {
+                _this.usersCurrentBooks = [];
+                _this.getUsersBooks();
+            }, function (error) {
+                return _this.errorMessage = error;
+            });
+        };
         MyBooksComponent = __decorate([core_1.Component({
             selector: 'my-my-books',
             templateUrl: 'components/my-books/my-books.component.html',
@@ -45584,6 +45594,11 @@ $__System.registerDynamic("11", ["3", "47", "13", "44", "45", "46"], true, funct
             }).map(function (res) {
                 return res.json();
             });
+        };
+        BooksService.prototype.deleteBook = function (id) {
+            return this.http.delete('/api/books/' + id).map(function (res) {
+                return res.json();
+            }).catch(this.handleError);
         };
         /**
           * Handle HTTP error

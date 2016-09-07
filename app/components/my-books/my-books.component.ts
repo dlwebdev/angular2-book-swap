@@ -80,4 +80,17 @@ export class MyBooksComponent implements OnInit {
               error =>  this.errorMessage = <any>error
             );         
     }
+    
+    deleteBook(book:object) {
+        this.booksService.deleteBook(book._id)
+            .subscribe(
+              res => {
+                // success
+              },
+              error =>  this.errorMessage = <any>error
+            );         
+            
+        this.usersCurrentBooks = [];
+        this.getUsersBooks();
+    }
 }

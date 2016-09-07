@@ -36,7 +36,8 @@
     <div class="flex-container">
       
       <div *ngFor="let book of usersCurrentBooks; let i = index;" class="flex-item">
-        <img src="{{ book.thumbnail }}">
+        <img src="{{ book.thumbnail }}" class="img-responsive">
+        <button type="button" class="close" (click)="deleteBook(book)">×</button>
       </div>
       
     </div> 

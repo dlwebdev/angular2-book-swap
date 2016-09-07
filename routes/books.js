@@ -54,4 +54,13 @@ router.post('/', function(req, res) {
 
 });
 
+router.delete('/:id', function(req, res) {
+    var id = req.params.id;
+    
+    Book.remove({'_id': id},function(result) {
+        console.log("Removed book. Results: ", result);
+    });    
+});
+
+
 module.exports = router;
