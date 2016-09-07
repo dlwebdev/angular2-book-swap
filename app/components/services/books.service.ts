@@ -18,6 +18,12 @@ export class BooksService {
   */  
   constructor(private http: Http, private jsonp:Jsonp) {}
 
+  getAllBooks(): Observable<Object[]> {
+    return this.http.get('/api/books/')
+                .map((res: Response) => res.json())
+                .catch(this.handleError);     
+  } 
+
   searchForBooks(term:string): Observable<Object[]> {
     return this.http.get('/api/books/search/' + term)
                 .map((res: Response) => res.json())

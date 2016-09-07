@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FORM_DIRECTIVES } from '@angular/forms';
 
+import { BooksService } from "../services/books.service";
+
 @Component({
     selector: 'my-all-books',
     templateUrl: 'components/all-books/all-books.component.html',
@@ -9,14 +11,21 @@ import { FORM_DIRECTIVES } from '@angular/forms';
 })
 export class AllBooksComponent implements OnInit {
 
-    constructor() {
-        console.log("GETTING USERS!");
-    }
+    allBooks: any = [];
+
+    constructor(private booksService: BooksService) { }
     
-    /**
-    * Get the names OnInit
-    */
     ngOnInit() {
-        console.log("Initializing all books component");
+        this.getAllBooks();
+    } 
+    
+    getAllBooks() {
+        this.booksService.getAllBooks()
+            .subscribe(
+              books => {
+                this.allBooks = books;
+              },
+              error =>  this.errorMessage = <any>error
+            );          
     }    
 }
