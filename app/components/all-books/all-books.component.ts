@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FORM_DIRECTIVES } from '@angular/forms';
+import { Router, ActivatedRoute, ROUTER_DIRECTIVES } from '@angular/router';
 
 import { BooksService } from "../services/books.service";
 import { UsersService } from "../services/users.service";
@@ -8,14 +9,14 @@ import { UsersService } from "../services/users.service";
     selector: 'my-all-books',
     templateUrl: 'components/all-books/all-books.component.html',
     styleUrls: ['components/all-books/all-books.component.css'],
-    directives: [FORM_DIRECTIVES]
+    directives: [FORM_DIRECTIVES, ROUTER_DIRECTIVES]
 })
 export class AllBooksComponent implements OnInit {
 
     allBooks: any = [];
     isLoggedIn: boolean = false;
 
-    constructor(private booksService: BooksService, private usersService: UsersService) { }
+    constructor(private booksService: BooksService, private usersService: UsersService, private router: Router) { }
     
     ngOnInit() {
         this.checkIfLoggedIn();
@@ -55,6 +56,7 @@ export class AllBooksComponent implements OnInit {
             .subscribe(
               res => {
                 console.log("Result from book being requested: ", res);
+                this.router.navigate(['/my-books']);
               },
               error =>  this.errorMessage = <any>error
             );         

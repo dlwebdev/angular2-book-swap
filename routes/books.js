@@ -72,6 +72,24 @@ router.post('/request/:userIdRequesting', function(req, res) {
     });
 });
 
+router.get('/user/requests/:id', function(req, res) {
+    var currentUserId = req.params.id;
+    
+    BookRequest.find({ 'userIdRequesting': currentUserId }, function (err, books) {
+        if(err) console.log('Err: ', err);
+        res.json(books);
+    });   
+});
+
+router.get('/requests-for-user/:id', function(req, res) {
+    var currentUserId = req.params.id;
+    
+    BookRequest.find({ 'userIdHasBook': currentUserId }, function (err, books) {
+        if(err) console.log('Err: ', err);
+        res.json(books);
+    });   
+});
+
 router.delete('/:id', function(req, res) {
     var id = req.params.id;
     

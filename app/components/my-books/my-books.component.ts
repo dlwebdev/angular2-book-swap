@@ -17,6 +17,9 @@ export class MyBooksComponent implements OnInit {
     
     usersCurrentBooks: any = [];
     
+    booksYouRequested: any = [];
+    booksRequestedFromOthers: any = [];
+    
     constructor(private booksService: BooksService, private usersService: UsersService, private router: Router) { }
 
     ngOnInit() {
@@ -32,6 +35,8 @@ export class MyBooksComponent implements OnInit {
                     
                     if(this.user._id) {
                       this.getUsersBooks();
+                      this.getBooksYouRequested();
+                      this.getBooksRequestedFromOthers();
                     }
                     else {
                       this.router.navigate(['/login']);
@@ -39,7 +44,11 @@ export class MyBooksComponent implements OnInit {
                 },
                 error =>  this.errorMessage = <any>error
             );      
-    }    
+    }   
+    
+    processRequest(book:object) {
+        console.log("Allow someone to borrow your book: ", book);
+    }
     
     searchForBook() {
         this.booksService.searchForBooks(this.searchTitle)
@@ -49,6 +58,26 @@ export class MyBooksComponent implements OnInit {
               },
               error =>  this.errorMessage = <any>error
             );        
+    }
+    
+    getBooksYouRequested() {
+        this.booksService.getRequestsFromUser(this.user._id)
+            .subscribe(
+              books => {
+                this.booksYouRequested = books;
+              },
+              error =>  this.errorMessage = <any>error
+            );          
+    }
+    
+    getBooksRequestedFromOthers() {
+        this.booksService.getRequestsFromOthers(this.user._id)
+            .subscribe(
+              books => {
+                this.booksRequestedFromOthers = books;
+              },
+              error =>  this.errorMessage = <any>error
+            );          
     }
     
     getUsersBooks() {

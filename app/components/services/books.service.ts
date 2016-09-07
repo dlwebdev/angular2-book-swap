@@ -36,6 +36,20 @@ export class BooksService {
                 .catch(this.handleError);     
   }   
   
+  getRequestsFromUser(userId:string): Observable<Object[]> {
+    // Get all of the requests this user has made
+    return this.http.get('/api/books/user/requests/' + userId)
+                .map((res: Response) => res.json())
+                .catch(this.handleError);     
+  }   
+  
+  getRequestsFromOthers(userId:string): Observable<Object[]> {
+    // Get all requests directed towards this user. So other people requesting books from this user
+    return this.http.get('/api/books/requests-for-user/' + userId)
+                .map((res: Response) => res.json())
+                .catch(this.handleError);     
+  }    
+  
   requestBook(book:Object, userIdRequesting:string): Observable<string[]> {
     let headers = new Headers({
       'Content-Type': 'application/json'});

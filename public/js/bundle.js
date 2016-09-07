@@ -16798,7 +16798,7 @@ $__System.registerDynamic("b", ["3", "e", "11", "f"], true, function ($__require
         AllBooksComponent.prototype.requestBook = function (book) {
             var _this = this;
             console.log("User with id of " + this.user._id + " is requesting this book: ", book);
-            this.booksService.requestBook(book, userIdRequesting).subscribe(function (res) {
+            this.booksService.requestBook(book, this.user._id).subscribe(function (res) {
                 console.log("Result from book being requested: ", res);
             }, function (error) {
                 return _this.errorMessage = error;
@@ -25442,6 +25442,8 @@ $__System.registerDynamic("c", ["3", "e", "7", "f", "11"], true, function ($__re
             this.searchTitle = '';
             this.searchResults = [];
             this.usersCurrentBooks = [];
+            this.booksYouRequested = [];
+            this.booksRequestedFromOthers = [];
         }
         MyBooksComponent.prototype.ngOnInit = function () {
             this.checkIfLoggedIn();
@@ -25453,6 +25455,8 @@ $__System.registerDynamic("c", ["3", "e", "7", "f", "11"], true, function ($__re
                 _this.user = user;
                 if (_this.user._id) {
                     _this.getUsersBooks();
+                    _this.getBooksYouRequested();
+                    _this.getBooksRequestedFromOthers();
                 } else {
                     _this.router.navigate(['/login']);
                 }
@@ -25460,10 +25464,29 @@ $__System.registerDynamic("c", ["3", "e", "7", "f", "11"], true, function ($__re
                 return _this.errorMessage = error;
             });
         };
+        MyBooksComponent.prototype.processRequest = function (book) {
+            console.log("Allow someone to borrow your book: ", book);
+        };
         MyBooksComponent.prototype.searchForBook = function () {
             var _this = this;
             this.booksService.searchForBooks(this.searchTitle).subscribe(function (books) {
                 _this.searchResults = books;
+            }, function (error) {
+                return _this.errorMessage = error;
+            });
+        };
+        MyBooksComponent.prototype.getBooksYouRequested = function () {
+            var _this = this;
+            this.booksService.getRequestsFromUser(this.user._id).subscribe(function (books) {
+                _this.booksYouRequested = books;
+            }, function (error) {
+                return _this.errorMessage = error;
+            });
+        };
+        MyBooksComponent.prototype.getBooksRequestedFromOthers = function () {
+            var _this = this;
+            this.booksService.getRequestsFromOthers(this.user._id).subscribe(function (books) {
+                _this.booksRequestedFromOthers = books;
             }, function (error) {
                 return _this.errorMessage = error;
             });
@@ -45601,6 +45624,18 @@ $__System.registerDynamic("11", ["3", "47", "13", "44", "45", "46"], true, funct
         };
         BooksService.prototype.getUsersBooks = function (userId) {
             return this.http.get('/api/books/user/' + userId).map(function (res) {
+                return res.json();
+            }).catch(this.handleError);
+        };
+        BooksService.prototype.getRequestsFromUser = function (userId) {
+            // Get all of the requests this user has made
+            return this.http.get('/api/books/user/requests/' + userId).map(function (res) {
+                return res.json();
+            }).catch(this.handleError);
+        };
+        BooksService.prototype.getRequestsFromOthers = function (userId) {
+            // Get all requests directed towards this user. So other people requesting books from this user
+            return this.http.get('/api/books/requests-for-user/' + userId).map(function (res) {
                 return res.json();
             }).catch(this.handleError);
         };
