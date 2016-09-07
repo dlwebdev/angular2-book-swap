@@ -16744,7 +16744,7 @@ $__System.registerDynamic("10", ["3", "7", "f"], true, function ($__require, exp
 
     return module.exports;
 });
-$__System.registerDynamic("b", ["3", "e", "11", "f"], true, function ($__require, exports, module) {
+$__System.registerDynamic("b", ["3", "e", "7", "11", "f"], true, function ($__require, exports, module) {
     "use strict";
 
     var define,
@@ -16762,12 +16762,14 @@ $__System.registerDynamic("b", ["3", "e", "11", "f"], true, function ($__require
     };
     var core_1 = $__require("3");
     var forms_1 = $__require("e");
+    var router_1 = $__require("7");
     var books_service_1 = $__require("11");
     var users_service_1 = $__require("f");
     var AllBooksComponent = function () {
-        function AllBooksComponent(booksService, usersService) {
+        function AllBooksComponent(booksService, usersService, router) {
             this.booksService = booksService;
             this.usersService = usersService;
+            this.router = router;
             this.allBooks = [];
             this.isLoggedIn = false;
         }
@@ -16800,6 +16802,7 @@ $__System.registerDynamic("b", ["3", "e", "11", "f"], true, function ($__require
             console.log("User with id of " + this.user._id + " is requesting this book: ", book);
             this.booksService.requestBook(book, this.user._id).subscribe(function (res) {
                 console.log("Result from book being requested: ", res);
+                _this.router.navigate(['/my-books']);
             }, function (error) {
                 return _this.errorMessage = error;
             });
@@ -16808,8 +16811,8 @@ $__System.registerDynamic("b", ["3", "e", "11", "f"], true, function ($__require
             selector: 'my-all-books',
             templateUrl: 'components/all-books/all-books.component.html',
             styleUrls: ['components/all-books/all-books.component.css'],
-            directives: [forms_1.FORM_DIRECTIVES]
-        }), __metadata('design:paramtypes', [books_service_1.BooksService, users_service_1.UsersService])], AllBooksComponent);
+            directives: [forms_1.FORM_DIRECTIVES, router_1.ROUTER_DIRECTIVES]
+        }), __metadata('design:paramtypes', [books_service_1.BooksService, users_service_1.UsersService, router_1.Router])], AllBooksComponent);
         return AllBooksComponent;
     }();
     exports.AllBooksComponent = AllBooksComponent;
