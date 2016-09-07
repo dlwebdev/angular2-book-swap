@@ -1,11 +1,24 @@
 <div class="container">
     <h1>Messages</h1>
   
+    <h2>Received</h2>
+  
     <div class="list-group"> 
-        <a href="#" class="list-group-item active"> 
-            <h4 class="list-group-item-heading">List group item heading</h4> 
-            <p class="list-group-item-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p> 
+        <a href="#" *ngFor="let message of messagesToUser; let i = index;" class="list-group-item active"> 
+            <h4 class="list-group-item-heading">{{ message.title }}</h4> 
+            <p class="list-group-item-text">{{ message.message }}<br>Sent on: {{ message.date }}</p> 
         </a>
     </div>  
+    
+    <hr>
+    
+    <h2>Sent</h2>
+  
+    <div class="list-group"> 
+        <a href="#" *ngFor="let message of messagesFromUser; let i = index;" class="list-group-item active"> 
+            <h4 class="list-group-item-heading">{{ message.title }}</h4> 
+            <p class="list-group-item-text">{{ message.message }}<br>Sent on: {{ message.date }}</p> 
+        </a>
+    </div> 
     
 </div>      

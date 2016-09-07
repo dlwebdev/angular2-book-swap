@@ -12,7 +12,7 @@ import { UsersService } from "../services/users.service";
     directives: [FORM_DIRECTIVES, ROUTER_DIRECTIVES]
 })
 export class AllBooksComponent implements OnInit {
-
+    user: object = {};
     allBooks: any = [];
     isLoggedIn: boolean = false;
 

@@ -44,6 +44,7 @@ router.post('/', function(req, res) {
     var message = new Message({
       fromUser: req.body.fromUser,
       toUser: req.body.toUser,
+      title: req.body.title,
       message: req.body.message,
       date: currentDate
     });
