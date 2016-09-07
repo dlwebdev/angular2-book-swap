@@ -1,7 +1,7 @@
 <div class="container">
   
   <div class="row">
-    <h2 class="current-books-title text-center">All Books</h2>
+    <h2 class="current-books-title text-center">Books You Don't Own</h2>
     <div *ngIf="isLoggedIn" class="text-center">Click <span class="glyphicon glyphicon-random" aria-hidden="true"></span> to request a trade.</div>
     <div *ngIf="!isLoggedIn" class="text-center"><a [routerLink]="['/login']">Login</a> to request a trade.</div>
     

@@ -16744,7 +16744,7 @@ $__System.registerDynamic("10", ["3", "7", "f"], true, function ($__require, exp
 
     return module.exports;
 });
-$__System.registerDynamic("b", ["3", "e", "11"], true, function ($__require, exports, module) {
+$__System.registerDynamic("b", ["3", "e", "11", "f"], true, function ($__require, exports, module) {
     "use strict";
 
     var define,
@@ -16763,13 +16763,29 @@ $__System.registerDynamic("b", ["3", "e", "11"], true, function ($__require, exp
     var core_1 = $__require("3");
     var forms_1 = $__require("e");
     var books_service_1 = $__require("11");
+    var users_service_1 = $__require("f");
     var AllBooksComponent = function () {
-        function AllBooksComponent(booksService) {
+        function AllBooksComponent(booksService, usersService) {
             this.booksService = booksService;
+            this.usersService = usersService;
             this.allBooks = [];
+            this.isLoggedIn = false;
         }
         AllBooksComponent.prototype.ngOnInit = function () {
-            this.getAllBooks();
+            this.checkIfLoggedIn();
+        };
+        AllBooksComponent.prototype.checkIfLoggedIn = function () {
+            var _this = this;
+            // If the user is logged in it will return the user object, otherwise will redirect to login
+            this.usersService.getCurrentUser().subscribe(function (user) {
+                _this.user = user;
+                if (_this.user._id) {
+                    _this.isLoggedIn = true;
+                }
+                _this.getAllBooks();
+            }, function (error) {
+                return _this.errorMessage = error;
+            });
         };
         AllBooksComponent.prototype.getAllBooks = function () {
             var _this = this;
@@ -16779,12 +16795,21 @@ $__System.registerDynamic("b", ["3", "e", "11"], true, function ($__require, exp
                 return _this.errorMessage = error;
             });
         };
+        AllBooksComponent.prototype.requestBook = function (book) {
+            var _this = this;
+            console.log("User with id of " + this.user._id + " is requesting this book: ", book);
+            this.booksService.requestBook(book, userIdRequesting).subscribe(function (res) {
+                console.log("Result from book being requested: ", res);
+            }, function (error) {
+                return _this.errorMessage = error;
+            });
+        };
         AllBooksComponent = __decorate([core_1.Component({
             selector: 'my-all-books',
             templateUrl: 'components/all-books/all-books.component.html',
             styleUrls: ['components/all-books/all-books.component.css'],
             directives: [forms_1.FORM_DIRECTIVES]
-        }), __metadata('design:paramtypes', [books_service_1.BooksService])], AllBooksComponent);
+        }), __metadata('design:paramtypes', [books_service_1.BooksService, users_service_1.UsersService])], AllBooksComponent);
         return AllBooksComponent;
     }();
     exports.AllBooksComponent = AllBooksComponent;
@@ -25469,13 +25494,13 @@ $__System.registerDynamic("c", ["3", "e", "7", "f", "11"], true, function ($__re
         };
         MyBooksComponent.prototype.deleteBook = function (book) {
             var _this = this;
-            console.log("Will remove this book from users collection: ", book);
             this.booksService.deleteBook(book._id).subscribe(function (res) {
-                _this.usersCurrentBooks = [];
-                _this.getUsersBooks();
+                // success
             }, function (error) {
                 return _this.errorMessage = error;
             });
+            this.usersCurrentBooks = [];
+            this.getUsersBooks();
         };
         MyBooksComponent = __decorate([core_1.Component({
             selector: 'my-my-books',
@@ -25514,11 +25539,6 @@ $__System.registerDynamic("f", ["3", "47", "13", "44", "45", "46"], true, functi
     $__require("45");
     $__require("46");
     var UsersService = function () {
-        /**
-         * Creates a new UsersService with the injected Http.
-         * @param {Http} http - The injected Http.
-         * @constructor
-        */
         function UsersService(http, jsonp) {
             this.http = http;
             this.jsonp = jsonp;
@@ -25526,7 +25546,6 @@ $__System.registerDynamic("f", ["3", "47", "13", "44", "45", "46"], true, functi
         UsersService.prototype.registerUser = function (user) {
             var headers = new http_1.Headers({
                 'Content-Type': 'application/json' });
-            console.log("Service passing along user: ", user);
             return this.http.post('/api/user/register', JSON.stringify(user), {
                 headers: headers
             }).map(function (res) {
@@ -25536,7 +25555,6 @@ $__System.registerDynamic("f", ["3", "47", "13", "44", "45", "46"], true, functi
         UsersService.prototype.loginUser = function (user) {
             var headers = new http_1.Headers({
                 'Content-Type': 'application/json' });
-            console.log("Logging in user: ", user);
             return this.http.post('/login', JSON.stringify(user), {
                 headers: headers
             }).map(function (res) {
@@ -45585,6 +45603,15 @@ $__System.registerDynamic("11", ["3", "47", "13", "44", "45", "46"], true, funct
             return this.http.get('/api/books/user/' + userId).map(function (res) {
                 return res.json();
             }).catch(this.handleError);
+        };
+        BooksService.prototype.requestBook = function (book, userIdRequesting) {
+            var headers = new http_1.Headers({
+                'Content-Type': 'application/json' });
+            return this.http.post('/api/books/request/' + userIdRequesting, JSON.stringify(book), {
+                headers: headers
+            }).map(function (res) {
+                return res.json();
+            });
         };
         BooksService.prototype.addBookToUsersCollection = function (book) {
             var headers = new http_1.Headers({

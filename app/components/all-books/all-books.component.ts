@@ -49,16 +49,15 @@ export class AllBooksComponent implements OnInit {
     }  
     
     requestBook(book:object) {
-        this.booksService.deleteBook(book._id)
+        console.log("User with id of " + this.user._id + " is requesting this book: ", book);
+         
+        this.booksService.requestBook(book, this.user._id)
             .subscribe(
               res => {
-                // success
+                console.log("Result from book being requested: ", res);
               },
               error =>  this.errorMessage = <any>error
             );         
-            
-        this.usersCurrentBooks = [];
-        this.getUsersBooks();
     }    
 
 }

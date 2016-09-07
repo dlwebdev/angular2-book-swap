@@ -1,11 +1,17 @@
 var express = require('express');
 var router = express.Router();
 var books = require('google-books-search');
+var moment = require('moment');
 
 var Book = require('../server/models/book');
+var BookRequest = require('../server/models/request');
 
 router.get('/', function(req, res) {
-  Book.find({}, function (err, books) {
+  var currentUserId = '0';
+  
+  if(req.user) currentUserId = req.user._id;
+  
+  Book.find({'userId': {'$ne': currentUserId}}, function (err, books) {
     if(err) console.log('Err: ', err);
     res.json(books);
   }); 
@@ -35,13 +41,7 @@ router.get('/user/:id', function(req, res) {
 });
 
 router.post('/', function(req, res) {
-
     var book = new Book(req.body);
-
-  //userId: String,
-  //thumbnail: String,
-  //isCheckedOut: Boolean,
-  //name: String
 
     console.log('Adding book to users collection: ', book);
 
@@ -51,7 +51,25 @@ router.post('/', function(req, res) {
       }
       res.status(201).json(book);
     });
+});
 
+router.post('/request/:userIdRequesting', function(req, res) {
+    var currentDate = moment().format('MM-DD-YYYY');
+    
+    var bookRequest = new BookRequest({
+      bookId: req.body._id,
+      userIdHasBook: req.body.userId,
+      userIdRequesting: req.params.userIdRequesting,
+      requestProcessed: false,
+      date: currentDate
+    });
+
+    bookRequest.save(function (err, req) {
+      if (err) { 
+        console.log('error saving book: ', err);
+      }
+      res.status(201).json(req);
+    });
 });
 
 router.delete('/:id', function(req, res) {

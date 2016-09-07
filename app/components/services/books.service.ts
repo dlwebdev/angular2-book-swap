@@ -35,6 +35,15 @@ export class BooksService {
                 .map((res: Response) => res.json())
                 .catch(this.handleError);     
   }   
+  
+  requestBook(book:Object, userIdRequesting:string): Observable<string[]> {
+    let headers = new Headers({
+      'Content-Type': 'application/json'});
+
+    return this.http.post('/api/books/request/' + userIdRequesting, JSON.stringify(book), {
+      headers: headers
+    }).map((res) => res.json());
+  }    
 
   addBookToUsersCollection(book:Object): Observable<string[]> {
     let headers = new Headers({
