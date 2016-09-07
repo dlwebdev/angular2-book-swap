@@ -29,6 +29,9 @@
           <a [routerLink]="['/my-books']">MY BOOKS</a>
         </li>
         <li *ngIf="userLoggedIn">
+          <a [routerLink]="['/messages']">MESSAGES</a>
+        </li>        
+        <li *ngIf="userLoggedIn">
           <a href="/api/user/logout">LOGOUT</a>
         </li>        
         

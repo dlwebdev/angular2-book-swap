@@ -16,11 +16,21 @@ router.get('/', function(req, res) {
   */
 });
 
-router.get('/user/:id', function(req, res) {
+router.get('/to-user/:id', function(req, res) {
   // Get Messages for this user
     var currentUserId = req.params.id;
     
     Message.find({ 'toUser': currentUserId }, function (err, messages) {
+        if(err) console.log('Err: ', err);
+        res.json(messages);
+    });   
+});
+
+router.get('/from-user/:id', function(req, res) {
+  // Get Messages for this user
+    var currentUserId = req.params.id;
+    
+    Message.find({ 'fromUser': currentUserId }, function (err, messages) {
         if(err) console.log('Err: ', err);
         res.json(messages);
     });   
