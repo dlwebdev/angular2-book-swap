@@ -43,6 +43,20 @@
     <div class="trade-details">
         <div *ngIf="youRequestedCurrentTrade" class="text-center">
             <p>Send this user a message about the book you have requested titled: {{ currentTradeDetails.book.name }}</p>
+            
+            <div *ngIf="tradeHasCounterTrade">
+                <h1 class="danger">There is an offer for this trade.</h1>
+                
+                <p>
+                    You would receive: <span class="bold">{{ currentTradeDetails.book.name }}</span><br>
+                    You would give them: <span class="bold">{{ counterTradeBook.name }}</span>
+                </p>     
+                
+                <div class="row">
+                    <button type="button" (click)="finalizeTrade()" class="btn btn-success btn-lg btn-block">Finalize Trade</button>
+                    <button type="button" (click)="deleteTrade()" class="btn btn-danger btn-lg btn-block">Decline Trade</button>
+                </div>                
+            </div>
         </div>
         
         <div *ngIf="otherRequestedCurrentTrade" class="text-center">
@@ -65,6 +79,17 @@
                   </div>
                   
                 </div> 
+            </div>
+            
+            <div *ngIf="tradeToRequest" class="row">
+                <p>
+                    You would accept the offer to trade your book titled <span class="bold">{{ currentTradeDetails.book.name }}</span> in return for their book titled 
+                    <span class="bold">{{ bookToAcceptTrade.name }}</span>
+                </p>
+            </div>            
+            
+            <div *ngIf="tradeToRequest" class="row">
+                <button type="button" (click)="acceptTrade()" class="btn btn-success btn-lg btn-block">Accept Trade</button>
             </div>
             
             <div class="row">

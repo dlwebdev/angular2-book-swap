@@ -16,7 +16,12 @@ import { TradesService } from "../services/trades.service";
 export class TradesComponent implements OnInit {
     user: object = {};
     isLoggedIn: boolean = false;
+    tradeToRequest: boolean = false;
+    tradeHasCounterTrade: boolean = false;
     actionResultText: string = '';
+    
+    bookToAcceptTrade: object = {};
+    counterTradeBook: object = {};
     
     currentTradeDetails: object = {};
     youRequestedCurrentTrade: boolean = false;
@@ -88,11 +93,27 @@ export class TradesComponent implements OnInit {
         
         this.currentMessage.title = "Trade for your book: " + trade.book.name;
         this.currentMessage.message = "I'm interested in making a trade for: " + trade.book.name + ". Please let me know if you'd be interested in any of my books.";
+        
+        if(this.currentTradeDetails.trade.counterOfferBookId) {
+          
+          this.booksService.getBook(this.currentTradeDetails.trade.counterOfferBookId)
+                .subscribe(
+                  book => {
+                    this.counterTradeBook = book;
+                  },
+                  error =>  this.errorMessage = <any>error
+                );          
+                
+          this.tradeHasCounterTrade = true;
+          
+          // SHOW THE book the user wants from you in return. Accept or Decline Trade
+        }
       }
       else {
-        // someone is requesting a book you 
+        // someone is requesting a book you own
         this.youRequestedCurrentTrade = false;
         this.otherRequestedCurrentTrade = true;
+        this.tradeHasCounterTrade = false;
         
         this.currentMessage.toUser = trade.trade.userIdRequesting;
         
@@ -106,12 +127,71 @@ export class TradesComponent implements OnInit {
     }
     
     proposeBookTrade(book:object) {
+      this.tradeToRequest = true;
+      this.bookToAcceptTrade = book;
+    }
+    
+    acceptTrade() {
       // You have accepted the offer to trade the book they've requested in return for this book
       this.currentMessage.message = "I will accept your trade request for my book: " + this.currentTradeDetails.book.name + 
-        " in return for your book titled: " + book.name + ". Let's set up an exchange.";
-        
+        " in return for your book titled: " + this.bookToAcceptTrade.name + ". Let's set up an exchange.";
+      
+      this.tradeToRequest = false;
+      this.tradeDetailsClicked = false;
+      
+      // update trade request and set counterOfferBookId to this.bookToAcceptTrade._id
+      let updatedTrade = this.currentTradeDetails.trade;
+      updatedTrade.counterOfferBookId = this.bookToAcceptTrade._id;
+      
+      this.tradesService.updateTrade(updatedTrade)
+            .subscribe(
+              res => {
+                //this.getTradesRequestedFromOthers();
+              },
+              error =>  this.errorMessage = <any>error
+            );   
+            
       this.sendMessage();
     }
+    
+    finalizeTrade() {
+      // this.counterTradeBook - Book you are getting
+      // this.currentTradeDetails.book -- Book you are giving away
+      
+      this.tradeToRequest = false;
+      this.tradeDetailsClicked = false;      
+      
+      // Remove both books from the system after sending message. They can repost them on their own accounts if they wish to trade them in the future
+      
+      this.tradesService.deleteTrade(this.currentTradeDetails.trade._id)
+            .subscribe(
+              trade => {
+                console.log("Removed trade: ", trade);
+              },
+              error =>  this.errorMessage = <any>error
+            );       
+            
+      this.deleteBook(this.counterTradeBook);
+      this.deleteBook(this.currentTradeDetails.book);
+      
+      this.getTradesYouRequested(this.counterTradeBook);
+      
+      this.currentMessage.message = "I have finalized this request. I will be sending you: " + this.currentTradeDetails.book.name + 
+        " in return for your book titled: " + this.counterTradeBook.name + ". Let's set up the exchange.";
+        
+      this.sendMessage();
+      this.router.navigate(['/my-books']);
+    }
+    
+    deleteBook(book:object) {
+        this.booksService.deleteBook(book._id)
+            .subscribe(
+              res => {
+                // success
+              },
+              error =>  this.errorMessage = <any>error
+            );         
+    }    
     
     deleteTrade() {
       // Delete the trade and send the user a message that the trade was declined.
@@ -168,6 +248,7 @@ export class TradesComponent implements OnInit {
     }
     
     getBooksYouRequested() {
+        this.yourTradeDetails = [];
         let trades = this.tradesYouRequested;
         
         for( let i = 0; i < trades.length; i++ ) {
@@ -199,6 +280,7 @@ export class TradesComponent implements OnInit {
     
     getBooksRequestedFromOthers() {
         let trades = this.tradesRequestedFromOthers;
+        this.othersTradeDetails = [];
         
         for( let i = 0; i < trades.length; i++ ) {
           let curTrade = trades[i];

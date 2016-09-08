@@ -36,6 +36,14 @@ export class TradesService {
                 .catch(this.handleError);     
   }   
   
+  updateTrade(trade:Object): Observable<string[]> {
+    let headers = new Headers({'Content-Type': 'application/json'});
+
+    return this.http.put('/api/trades/', JSON.stringify(trade), {
+      headers: headers
+    }).map((res) => res.json());
+  }   
+  
   deleteTrade(id:string): Observable<string[]> {
     return this.http.delete('/api/trades/' + id)
                     .map((res: Response) => res.json())

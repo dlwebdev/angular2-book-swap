@@ -7,6 +7,7 @@ var bookRequestSchema = new Schema({
   bookId: String,
   userIdHasBook: String,
   userIdRequesting: String,
+  counterOfferBookId: String,
   requestProcessed: Boolean,
   date: String
 });

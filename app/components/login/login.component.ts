@@ -32,7 +32,8 @@ export class LoginComponent {
                     this.loginFailureMessage = "Incorrect Credentials";
                 } else {
                     // send to my-books
-                    this.router.navigate(['/my-books']);
+                    //this.router.navigate(['/my-books']);
+                    document.location = "/#/my-books";
                 }
               },
               error =>  this.errorMessage = <any>error

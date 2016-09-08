@@ -16677,7 +16677,11 @@ $__System.registerDynamic("a", ["3", "10", "7", "11", "12", "13", "14"], true, f
             this.router = router;
             this.user = {};
             this.isLoggedIn = false;
+            this.tradeToRequest = false;
+            this.tradeHasCounterTrade = false;
             this.actionResultText = '';
+            this.bookToAcceptTrade = {};
+            this.counterTradeBook = {};
             this.currentTradeDetails = {};
             this.youRequestedCurrentTrade = false;
             this.otherRequestedCurrentTrade = false;
@@ -16714,6 +16718,7 @@ $__System.registerDynamic("a", ["3", "10", "7", "11", "12", "13", "14"], true, f
             });
         };
         TradesComponent.prototype.loadRequestDetails = function (trade, tradeType) {
+            var _this = this;
             console.log("Trade: ", trade);
             console.log("Trade Type: ", tradeType);
             this.currentTradeDetails = trade;
@@ -16725,10 +16730,19 @@ $__System.registerDynamic("a", ["3", "10", "7", "11", "12", "13", "14"], true, f
                 this.currentMessage.toUser = trade.book.userId;
                 this.currentMessage.title = "Trade for your book: " + trade.book.name;
                 this.currentMessage.message = "I'm interested in making a trade for: " + trade.book.name + ". Please let me know if you'd be interested in any of my books.";
+                if (this.currentTradeDetails.trade.counterOfferBookId) {
+                    this.booksService.getBook(this.currentTradeDetails.trade.counterOfferBookId).subscribe(function (book) {
+                        _this.counterTradeBook = book;
+                    }, function (error) {
+                        return _this.errorMessage = error;
+                    });
+                    this.tradeHasCounterTrade = true;
+                }
             } else {
-                // someone is requesting a book you 
+                // someone is requesting a book you own
                 this.youRequestedCurrentTrade = false;
                 this.otherRequestedCurrentTrade = true;
+                this.tradeHasCounterTrade = false;
                 this.currentMessage.toUser = trade.trade.userIdRequesting;
                 this.currentMessage.title = "Regarding your request for: " + trade.book.name;
                 this.currentMessage.message = "I understand that you want to trade for " + trade.book.name + ". I will take a look at your collection and offer a trade.";
@@ -16737,8 +16751,39 @@ $__System.registerDynamic("a", ["3", "10", "7", "11", "12", "13", "14"], true, f
             }
         };
         TradesComponent.prototype.proposeBookTrade = function (book) {
+            this.tradeToRequest = true;
+            this.bookToAcceptTrade = book;
+        };
+        TradesComponent.prototype.acceptTrade = function () {
+            var _this = this;
             // You have accepted the offer to trade the book they've requested in return for this book
-            this.currentMessage.message = "I will accept your trade request for my book: " + this.currentTradeDetails.book.name + " in return for your book titled: " + book.name + ". Let's set up an exchange.";
+            this.currentMessage.message = "I will accept your trade request for my book: " + this.currentTradeDetails.book.name + " in return for your book titled: " + this.bookToAcceptTrade.name + ". Let's set up an exchange.";
+            this.tradeToRequest = false;
+            this.tradeDetailsClicked = false;
+            // update trade request and set counterOfferBookId to this.bookToAcceptTrade._id
+            var updatedTrade = this.currentTradeDetails.trade;
+            updatedTrade.counterOfferBookId = this.bookToAcceptTrade._id;
+            this.tradesService.updateTrade(updatedTrade).subscribe(function (res) {
+                _this.getTradesRequestedFromOthers();
+            }, function (error) {
+                return _this.errorMessage = error;
+            });
+            this.sendMessage();
+        };
+        TradesComponent.prototype.finalizeTrade = function () {
+            // this.counterTradeBook - Book you are getting
+            // this.currentTradeDetails.book -- Book you are giving away
+            var _this = this;
+            this.tradeToRequest = false;
+            this.tradeDetailsClicked = false;
+            // Remove both books from the system after sending message. They can repost them on their own accounts if they wish to trade them in the future
+            this.tradesService.deleteTrade(this.currentTradeDetails.trade._id).subscribe(function (trade) {
+                console.log("Removed trade: ", trade);
+            }, function (error) {
+                return _this.errorMessage = error;
+            });
+            this.getTradesYouRequested();
+            this.currentMessage.message = "I have finalized this request. I will be sending you: " + this.currentTradeDetails.book.name + " in return for your book titled: " + this.counterTradeBook.name + ". Let's set up the exchange.";
             this.sendMessage();
         };
         TradesComponent.prototype.deleteTrade = function () {
@@ -16899,7 +16944,8 @@ $__System.registerDynamic("b", ["3", "10", "7", "12"], true, function ($__requir
                     _this.loginFailureMessage = "Incorrect Credentials";
                 } else {
                     // send to my-books
-                    _this.router.navigate(['/my-books']);
+                    //this.router.navigate(['/my-books']);
+                    document.location = "/#/my-books";
                 }
             }, function (error) {
                 return _this.errorMessage = error;
@@ -46079,6 +46125,14 @@ $__System.registerDynamic("14", ["3", "4b", "17", "48", "49", "4a"], true, funct
             return this.http.get('/api/trades/user/' + userId).map(function (res) {
                 return res.json();
             }).catch(this.handleError);
+        };
+        TradesService.prototype.updateTrade = function (trade) {
+            var headers = new http_1.Headers({ 'Content-Type': 'application/json' });
+            return this.http.put('/api/trades/', JSON.stringify(trade), {
+                headers: headers
+            }).map(function (res) {
+                return res.json();
+            });
         };
         TradesService.prototype.deleteTrade = function (id) {
             return this.http.delete('/api/trades/' + id).map(function (res) {

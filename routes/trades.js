@@ -19,6 +19,24 @@ router.get('/:tradeId', function(req, res) {
   }); 
 });
 
+router.put('/', function(req, res) {
+    var trade = req.body;
+    var id = trade._id;
+
+    delete trade._id;
+
+    if (id) {
+        BookRequest.update({_id: id}, trade, {upsert: true}, function (err, trade) {
+            if(err) console.log('Err: ', err);
+            //res.json(account);
+            BookRequest.findOne({'_id':id},function(err, result) {
+                if(err) console.log('Err: ', err);
+                return res.send(result);
+            });           
+        });
+    }    
+});
+
 router.delete('/:id', function(req, res) {
     var id = req.params.id;
     
