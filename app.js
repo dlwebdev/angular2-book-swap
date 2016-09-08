@@ -7,9 +7,6 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 var mongoose = require('mongoose');
 var passport = require('passport');
-
-var moment = require('moment');
-
 var MongoStore = require('connect-mongo')(session);
 
 require('./server/passport')(passport);
@@ -68,7 +65,6 @@ app.get('/loginSuccess', function(req, res, next) {
 });
 
 
-  
 var books = require('./routes/books');
 var users = require('./routes/users');
 var messages = require('./routes/messages');

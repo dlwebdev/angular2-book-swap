@@ -22,15 +22,18 @@
       
       <ul class="nav navbar-nav navbar-right">
         <li *ngIf="!userLoggedIn">
-          <a [routerLink]="['login']">Login</a>
+          <a [routerLink]="['login']">LOGIN</a>
         </li>
         
         <li *ngIf="userLoggedIn">
           <a [routerLink]="['/my-books']">MY BOOKS</a>
         </li>
         <li *ngIf="userLoggedIn">
+          <a [routerLink]="['/trades']">TRADES</a>
+        </li>          
+        <li *ngIf="userLoggedIn">
           <a [routerLink]="['/messages']">MESSAGES</a>
-        </li>        
+        </li> 
         <li *ngIf="userLoggedIn">
           <a href="/api/user/logout">LOGOUT</a>
         </li>        

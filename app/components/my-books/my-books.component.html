@@ -1,6 +1,10 @@
 <div class="container">
   <h2 class="current-books-title text-center">Trades</h2>
   
+  <div class="row text-center">
+    <p>* Click on a trade to contact the person involved</p>
+  </div>
+  
   <div class="row">
 
     <div class="col-md-6">
@@ -33,9 +37,9 @@
   
   <hr>
   
-  <h2 class="current-books-title">Your Books</h2>
-  
-  <div class="row">
+  <div class="row text-center">
+    <h2 class="current-books-title">Your Book Collection</h2>
+    
     <form class="form-inline">
       <div class="form-group">
         <input type="text" [(ngModel)]="searchTitle" [ngModelOptions]="{standalone: true}" class="form-control" id="addBook" placeholder="Search">
@@ -44,7 +48,7 @@
     </form>  
   </div>
   
-  <div class="row">
+  <div class="row text-center">
     <div class="search-results-title">Search Results</div>
     <p>Click a book to add it to your collection.</p>
       
@@ -53,7 +57,7 @@
         <div class="row">
           <div class="col-xs-10">
             <h4 class="list-group-item-heading">{{ book.title }}</h4>
-            <p class="list-group-item-text">{{ book.authors[0] }}<br>{{ book.description }}</p>
+            <p class="list-group-item-text"><span class="book-author">{{ book.authors[0] }}</span><br><br>{{ book.description }}</p>
           </div>
           <div class="col-xs-2">
             <img [src]="book.thumbnail" />
@@ -66,7 +70,6 @@
   <hr>
   
   <div class="row">
-    <div class="current-books-title">Current Books</div>
     <div class="flex-container">
       
       <div *ngFor="let book of usersCurrentBooks; let i = index;" class="flex-item">

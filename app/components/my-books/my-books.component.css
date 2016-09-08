@@ -44,6 +44,18 @@ ul {
   position: relative;
 }
 
+.list-group-item .book-author {
+  font-style: italic;
+}
+
+.list-group-item .list-group-item-heading {
+  font-weight: bold;
+}
+
+.list-group-item .list-group-item-text {
+  font-size: 13px;
+}
+
 .flex-item img {
   width: 128px;
   height: 192px;
@@ -51,6 +63,7 @@ ul {
 
 .book-search-results .list-group-item {
   cursor: pointer;
+  text-align: left;
 }
 
 .book-search-results .list-group-item:hover {

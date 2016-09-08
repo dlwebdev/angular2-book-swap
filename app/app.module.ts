@@ -7,6 +7,7 @@ import { routing } from "./routes";
 import { AppComponent }  from './app.component';
 import { HomeComponent } from "./components/home/home.component";
 import { MessagesComponent } from './components/messages/messages.component';
+import { TradesComponent } from './components/trades/trades.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
@@ -34,6 +35,7 @@ import { MessagesService } from "./components/services/messages.service";
         LoginComponent,
         RegisterComponent,
         HomeComponent,
+        TradesComponent,
         MessagesComponent,
         NavbarComponent,
         MyBooksComponent,
