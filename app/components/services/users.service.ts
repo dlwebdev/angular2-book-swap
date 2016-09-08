@@ -36,6 +36,14 @@ export class UsersService {
                     .map((res: Response) => res.json())
                     .catch(this.handleError);
   } 
+  
+  updateUser(user:Object): Observable<string[]> {
+    let headers = new Headers({'Content-Type': 'application/json'});
+
+    return this.http.put('/api/user/', JSON.stringify(user), {
+      headers: headers
+    }).map((res) => res.json());
+  }  
 
   /**
     * Handle HTTP error

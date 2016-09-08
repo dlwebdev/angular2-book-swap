@@ -35,6 +35,9 @@
           <a [routerLink]="['/messages']">MESSAGES</a>
         </li> 
         <li *ngIf="userLoggedIn">
+          <a [routerLink]="['/account']">MY ACCOUNT</a>
+        </li>         
+        <li *ngIf="userLoggedIn">
           <a href="/api/user/logout">LOGOUT</a>
         </li>        
         

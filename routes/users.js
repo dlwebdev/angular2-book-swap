@@ -25,6 +25,24 @@ router.get('/current-user', function(req, res, next) {
   }
 });
 
+router.put('/', function(req, res) {
+    var user = req.body;
+    var id = user._id;
+
+    delete user._id;
+
+    if (id) {
+        User.update({_id: id}, user, {upsert: true}, function (err, user) {
+            if(err) console.log('Err: ', err);
+            //res.json(account);
+            User.findOne({'_id':id},function(err, result) {
+                if(err) console.log('Err: ', err);
+                return res.send(result);
+            });           
+        });
+    }    
+});
+
 router.post('/register', function(req, res) {
   console.log("Registering User: ", req.body);
   

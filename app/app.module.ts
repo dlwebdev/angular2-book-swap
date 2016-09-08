@@ -6,6 +6,7 @@ import { routing } from "./routes";
 
 import { AppComponent }  from './app.component';
 import { HomeComponent } from "./components/home/home.component";
+import { AccountComponent } from './components/account/account.component';
 import { MessagesComponent } from './components/messages/messages.component';
 import { TradesComponent } from './components/trades/trades.component';
 import { LoginComponent } from './components/login/login.component';
@@ -35,6 +36,7 @@ import { TradesService } from "./components/services/trades.service";
     declarations: [
         AppComponent,
         LoginComponent,
+        AccountComponent,
         RegisterComponent,
         HomeComponent,
         TradesComponent,

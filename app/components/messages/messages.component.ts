@@ -93,8 +93,6 @@ export class MessagesComponent implements OnInit {
       this.currentMessage.fromUser = this.user._id;
       this.currentMessage.toUser = this.messageToShow.fromUser;
       
-      console.log("Will send this message: ", this.currentMessage);
-      
       // Use messageService to create a new message from this.
       this.messagesService.sendMessage(this.currentMessage)
             .subscribe(
@@ -109,17 +107,16 @@ export class MessagesComponent implements OnInit {
     } 
     
     deleteMessage() {
-        console.log("Will delete message: ", this.messageToShow);
-        
         this.messagesService.deleteMessage(this.messageToShow._id)
             .subscribe(
               message => {
                 this.messageToShow = {};
-                this.showMessageDetail = false;
-                this.getMessagesFromUser();
-                this.getMessagesToUser();                
               },
               error =>  this.errorMessage = <any>error
             );         
+            
+        this.showMessageDetail = false;
+        this.getMessagesFromUser();
+        this.getMessagesToUser();            
     }
 }
