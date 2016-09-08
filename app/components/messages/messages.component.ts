@@ -16,8 +16,21 @@ export class MessagesComponent implements OnInit {
     messagesFromUser: any = [];
     messagesToUser: any = [];
     isLoggedIn: boolean = false;
+    showMessageDetail: boolean = false;
+    messageType: string = '';
+    messageToShow: object = {};
+    currentMessage: object = {};
+    actionResultText: string = "";
 
-    constructor(private messagesService: MessagesService, private usersService: UsersService, private router: Router) { }
+    constructor(private messagesService: MessagesService, private usersService: UsersService, private router: Router) 
+    {
+      this.currentMessage = {
+        fromUser: '',
+        toUser: '',
+        title: '',
+        message: ''
+      };          
+    }
     
     ngOnInit() {
         this.checkIfLoggedIn();
@@ -40,7 +53,21 @@ export class MessagesComponent implements OnInit {
                 },
                 error =>  this.errorMessage = <any>error
             );      
-    }   
+    }  
+    
+    loadMessage(message:object, messageType:string) {
+        this.messageType = messageType;
+        
+        if(messageType == 'sent') {
+            // this was a message you sent
+        }
+        else {
+            // this message was received from another user
+        }
+        
+        this.messageToShow = message;
+        this.showMessageDetail = true;
+    }
     
     getMessagesFromUser() {
         this.messagesService.getMessagesFromUser(this.user._id)
@@ -57,6 +84,40 @@ export class MessagesComponent implements OnInit {
             .subscribe(
               messages => {
                 this.messagesToUser = messages;
+              },
+              error =>  this.errorMessage = <any>error
+            );         
+    }
+    
+    sendMessage() {
+      this.currentMessage.fromUser = this.user._id;
+      this.currentMessage.toUser = this.messageToShow.fromUser;
+      
+      console.log("Will send this message: ", this.currentMessage);
+      
+      // Use messageService to create a new message from this.
+      this.messagesService.sendMessage(this.currentMessage)
+            .subscribe(
+              message => {
+                this.actionResultText = "Your message has been sent";
+                this.currentMessage = {};
+                this.showMessageDetail = false;
+                this.messagesFromUser.push(message);
+              },
+              error =>  this.errorMessage = <any>error
+            );        
+    } 
+    
+    deleteMessage() {
+        console.log("Will delete message: ", this.messageToShow);
+        
+        this.messagesService.deleteMessage(this.messageToShow._id)
+            .subscribe(
+              message => {
+                this.messageToShow = {};
+                this.showMessageDetail = false;
+                this.getMessagesFromUser();
+                this.getMessagesToUser();                
               },
               error =>  this.errorMessage = <any>error
             );         
