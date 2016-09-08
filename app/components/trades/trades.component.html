@@ -45,14 +45,32 @@
             <p>You have requested to trade {{ currentTradeDetails.book.name }}. Send them a message about this trade.</p>
         </div>
         
-        <div *ngIf="otherRequestedCurrentTrade">
-            <p>Somebody wants to trade {{ currentTradeDetails.book.name }}. Click on one of their books to propose a trade or send them a message about this trade.</p>
+        <div *ngIf="otherRequestedCurrentTrade" class="text-center">
+            <p>A trade has been proposed for: {{ currentTradeDetails.book.name }}.</p>
+            <p>Here are this users books that you can choose from.</p>
+            <p>Click on <span class="glyphicon glyphicon-random" aria-hidden="true"></span> to complete the trade. You may also choose to send them a message.</p>
             
             <p>
                 <b>SHOW USERS BOOKS HERE.</b> 
                 This way you can just choose one of their books and click a process trade button. This will swap the owners of the book and send message to the other user 
                 letting them know the trade has been accepted and you need to set up an arrangment to make the trade.
-            </p>            
+            </p>  
+            
+            <div class="row">
+                <div class="flex-container">
+                  
+                  <div *ngFor="let book of usersBooks; let i = index;" class="flex-item">
+                    <img src="{{ book.thumbnail }}" class="img-responsive">
+                    <button type="button" class="trade" (click)="proposeBookTrade(book)"><span class="glyphicon glyphicon-random" aria-hidden="true"></span></button>
+                  </div>
+                  
+                </div> 
+            </div>
+            
+            <div class="row">
+                <button type="button" (click)="deleteTrade()" class="btn btn-danger btn-lg btn-block">Decline Trade</button>
+            </div>
+          
         </div>        
         
         <br><br>

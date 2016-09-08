@@ -68,10 +68,12 @@ app.get('/loginSuccess', function(req, res, next) {
 var books = require('./routes/books');
 var users = require('./routes/users');
 var messages = require('./routes/messages');
+var trades = require('./routes/trades');
 
 app.use('/api/user', users);
 app.use('/api/books', books);
 app.use('/api/messages', messages);
+app.use('/api/trades', trades);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

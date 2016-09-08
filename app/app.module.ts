@@ -17,6 +17,7 @@ import { MyBooksComponent } from './components/my-books/my-books.component';
 import { UsersService } from "./components/services/users.service";
 import { BooksService } from "./components/services/books.service";
 import { MessagesService } from "./components/services/messages.service";
+import { TradesService } from "./components/services/trades.service";
 
 @NgModule({
     imports: [
@@ -28,7 +29,8 @@ import { MessagesService } from "./components/services/messages.service";
     providers: [
         UsersService,
         BooksService,
-        MessagesService
+        MessagesService,
+        TradesService
     ],     
     declarations: [
         AppComponent,

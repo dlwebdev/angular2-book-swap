@@ -5,6 +5,7 @@ import { Router, ROUTER_DIRECTIVES } from '@angular/router';
 import { MessagesService } from "../services/messages.service";
 import { UsersService } from "../services/users.service";
 import { BooksService } from "../services/books.service";
+import { TradesService } from "../services/trades.service";
 
 @Component({
     selector: 'my-trades',
@@ -23,6 +24,8 @@ export class TradesComponent implements OnInit {
 
     tradeDetailsClicked: boolean = false;
 
+    usersBooks: any = [];
+
     tradesYouRequested: any = [];
     yourTradeDetails: any = [];
     
@@ -31,7 +34,13 @@ export class TradesComponent implements OnInit {
     
     currentMessage: object = {};
 
-    constructor(private booksService: BooksService, private messagesService: MessagesService, private usersService: UsersService, private router: Router) {
+    constructor(
+      private tradesService: TradesService, 
+      private booksService: BooksService, 
+      private messagesService: MessagesService, 
+      private usersService: UsersService, 
+      private router: Router
+    ) {
       this.currentMessage = {
         fromUser: '',
         toUser: '',
@@ -67,6 +76,9 @@ export class TradesComponent implements OnInit {
       console.log("Trade: ", trade);
       console.log("Trade Type: ", tradeType);
       
+      this.currentTradeDetails = trade;
+      this.tradeDetailsClicked = true;      
+      
       if(tradeType === 'receiving') {
         // you are requesting someone else's book
         this.otherRequestedCurrentTrade = false;
@@ -85,11 +97,38 @@ export class TradesComponent implements OnInit {
         this.currentMessage.toUser = trade.trade.userIdRequesting;
         
         this.currentMessage.title = "Regarding your request for: " + trade.book.name;
-        this.currentMessage.message = "I understand that you want to trade for " + trade.book.name + ". I will take a look at your collection and offer a trade.";        
+        this.currentMessage.message = "I understand that you want to trade for " + trade.book.name + ". I will take a look at your collection and offer a trade."; 
+        
+        console.log("this.currentTradeDetails.trade: ", this.currentTradeDetails.trade);
+        
+        this.loadUsersBooks(this.currentTradeDetails.trade.userIdRequesting);
       }
+    }
+    
+    deleteTrade() {
+      // Delete the trade and send the user a message that the trade was declined.
+      this.tradesService.deleteTrade(this.currentTradeDetails.trade._id)
+            .subscribe(
+              trade => {
+                console.log("Removed trade: ", trade);
+                this.getTradesRequestedFromOthers();                
+              },
+              error =>  this.errorMessage = <any>error
+            );       
       
-      this.currentTradeDetails = trade;
-      this.tradeDetailsClicked = true;
+      this.currentMessage.message = "Thanks for your trade request, but I'm not interested in that book at the moment.";
+      this.sendMessage();
+    }
+    
+    loadUsersBooks(userIdRequestingTrade:string) {
+      // Load the users books that you can choose from
+      this.booksService.getUsersBooks(userIdRequestingTrade)
+            .subscribe(
+              books => {
+                this.usersBooks = books;
+              },
+              error =>  this.errorMessage = <any>error
+            );       
     }
     
     sendMessage() {
