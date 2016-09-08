@@ -17,6 +17,15 @@ router.get('/', function(req, res) {
   }); 
 });
 
+router.get('/:bookId', function(req, res) {
+  var bookId = req.params.bookId;
+  
+  Book.find({'_id': bookId}, function (err, book) {
+    if(err) console.log('Err: ', err);
+    res.json(book[0]);
+  }); 
+});
+
 router.get('/search/:term', function(req, res) {
   var searchTerm = req.params.term;
   console.log("Will search for books matching the term passed in: ", searchTerm);

@@ -16675,8 +16675,10 @@ $__System.registerDynamic("a", ["3", "10", "7", "11", "12", "13"], true, functio
             this.router = router;
             this.user = {};
             this.isLoggedIn = false;
-            this.booksYouRequested = [];
-            this.booksRequestedFromOthers = [];
+            this.tradesYouRequested = [];
+            this.yourTradeDetails = [];
+            this.tradesRequestedFromOthers = [];
+            this.othersTradeDetails = [];
         }
         TradesComponent.prototype.ngOnInit = function () {
             this.checkIfLoggedIn();
@@ -16687,8 +16689,8 @@ $__System.registerDynamic("a", ["3", "10", "7", "11", "12", "13"], true, functio
             this.usersService.getCurrentUser().subscribe(function (user) {
                 _this.user = user;
                 if (_this.user._id) {
-                    _this.getBooksYouRequested();
-                    _this.getBooksRequestedFromOthers();
+                    _this.getTradesYouRequested();
+                    _this.getTradesRequestedFromOthers();
                 } else {
                     _this.router.navigate(['/login']);
                 }
@@ -16696,21 +16698,69 @@ $__System.registerDynamic("a", ["3", "10", "7", "11", "12", "13"], true, functio
                 return _this.errorMessage = error;
             });
         };
+        TradesComponent.prototype.loadRequestDetails = function (book, tradeType) {
+            console.log("Book involved in trade: ", book);
+            console.log("Trade Type: ", tradeType);
+        };
+        TradesComponent.prototype.getTradesYouRequested = function () {
+            var _this = this;
+            this.booksService.getRequestsFromUser(this.user._id).subscribe(function (trades) {
+                _this.tradesYouRequested = trades;
+                _this.getBooksYouRequested();
+            }, function (error) {
+                return _this.errorMessage = error;
+            });
+        };
         TradesComponent.prototype.getBooksYouRequested = function () {
             var _this = this;
-            this.booksService.getRequestsFromUser(this.user._id).subscribe(function (books) {
-                _this.booksYouRequested = books;
+            var trades = this.tradesYouRequested;
+            var _loop_1 = function (i) {
+                var curTrade = trades[i];
+                this_1.booksService.getBook(curTrade.bookId).subscribe(function (book) {
+                    //console.log("Pushing book onto booksYouRequested. Book: ", book);
+                    _this.yourTradeDetails.push({
+                        'trade': curTrade,
+                        'book': book
+                    });
+                }, function (error) {
+                    return _this.errorMessage = error;
+                });
+            };
+            var this_1 = this;
+            for (var i = 0; i < trades.length; i++) {
+                _loop_1(i);
+            }
+            console.log("this.yourTradeDetails object: ", this.yourTradeDetails);
+        };
+        TradesComponent.prototype.getTradesRequestedFromOthers = function () {
+            var _this = this;
+            this.booksService.getRequestsFromOthers(this.user._id).subscribe(function (trades) {
+                _this.tradesRequestedFromOthers = trades;
+                _this.getBooksRequestedFromOthers();
             }, function (error) {
                 return _this.errorMessage = error;
             });
         };
         TradesComponent.prototype.getBooksRequestedFromOthers = function () {
             var _this = this;
-            this.booksService.getRequestsFromOthers(this.user._id).subscribe(function (books) {
-                _this.booksRequestedFromOthers = books;
-            }, function (error) {
-                return _this.errorMessage = error;
-            });
+            var trades = this.tradesRequestedFromOthers;
+            var _loop_2 = function (i) {
+                var curTrade = trades[i];
+                this_2.booksService.getBook(curTrade.bookId).subscribe(function (book) {
+                    //console.log("Pushing book onto booksRequestedFromOthers. Book: ", book);
+                    _this.othersTradeDetails.push({
+                        trade: curTrade,
+                        book: book
+                    });
+                }, function (error) {
+                    return _this.errorMessage = error;
+                });
+            };
+            var this_2 = this;
+            for (var i = 0; i < trades.length; i++) {
+                _loop_2(i);
+            }
+            console.log("this.othersTradeDetails object: ", this.othersTradeDetails);
         };
         TradesComponent.prototype.getMessagesFromUser = function () {
             var _this = this;
@@ -16729,9 +16779,9 @@ $__System.registerDynamic("a", ["3", "10", "7", "11", "12", "13"], true, functio
             });
         };
         TradesComponent = __decorate([core_1.Component({
-            selector: 'my-messages',
-            templateUrl: 'components/messages/messages.component.html',
-            styleUrls: ['components/messages/messages.component.css'],
+            selector: 'my-trades',
+            templateUrl: 'components/trades/trades.component.html',
+            styleUrls: ['components/trades/trades.component.css'],
             directives: [forms_1.FORM_DIRECTIVES, router_1.ROUTER_DIRECTIVES]
         }), __metadata('design:paramtypes', [books_service_1.BooksService, messages_service_1.MessagesService, users_service_1.UsersService, router_1.Router])], TradesComponent);
         return TradesComponent;
@@ -25635,8 +25685,6 @@ $__System.registerDynamic("e", ["3", "10", "7", "12", "13"], true, function ($__
                 _this.user = user;
                 if (_this.user._id) {
                     _this.getUsersBooks();
-                    _this.getBooksYouRequested();
-                    _this.getBooksRequestedFromOthers();
                 } else {
                     _this.router.navigate(['/login']);
                 }
@@ -25644,29 +25692,10 @@ $__System.registerDynamic("e", ["3", "10", "7", "12", "13"], true, function ($__
                 return _this.errorMessage = error;
             });
         };
-        MyBooksComponent.prototype.processRequest = function (book) {
-            console.log("Allow someone to borrow your book: ", book);
-        };
         MyBooksComponent.prototype.searchForBook = function () {
             var _this = this;
             this.booksService.searchForBooks(this.searchTitle).subscribe(function (books) {
                 _this.searchResults = books;
-            }, function (error) {
-                return _this.errorMessage = error;
-            });
-        };
-        MyBooksComponent.prototype.getBooksYouRequested = function () {
-            var _this = this;
-            this.booksService.getRequestsFromUser(this.user._id).subscribe(function (books) {
-                _this.booksYouRequested = books;
-            }, function (error) {
-                return _this.errorMessage = error;
-            });
-        };
-        MyBooksComponent.prototype.getBooksRequestedFromOthers = function () {
-            var _this = this;
-            this.booksService.getRequestsFromOthers(this.user._id).subscribe(function (books) {
-                _this.booksRequestedFromOthers = books;
             }, function (error) {
                 return _this.errorMessage = error;
             });
@@ -25820,6 +25849,11 @@ $__System.registerDynamic("13", ["3", "4a", "16", "47", "48", "49"], true, funct
             this.http = http;
             this.jsonp = jsonp;
         }
+        BooksService.prototype.getBook = function (bookId) {
+            return this.http.get('/api/books/' + bookId).map(function (res) {
+                return res.json();
+            }).catch(this.handleError);
+        };
         BooksService.prototype.getAllBooks = function () {
             return this.http.get('/api/books/').map(function (res) {
                 return res.json();

@@ -1,41 +1,4 @@
 <div class="container">
-  <h2 class="current-books-title text-center">Trades</h2>
-  
-  <div class="row text-center">
-    <p>* Click on a trade to contact the person involved</p>
-  </div>
-  
-  <div class="row">
-
-    <div class="col-md-6">
-      <div class="panel panel-info">
-        <div class="panel-heading">You Requested to Borrow</div>
-        <div class="panel-body">
-          <div class="list-group">
-            <button *ngFor="let book of booksYouRequested; let i = index;" class="list-group-item" type="button" class="list-group-item">
-              ID: {{ book.bookId }}
-            </button>
-          </div>
-        </div>
-      </div>      
-    </div>    
-    
-    <div class="col-md-6">
-      <div class="panel panel-success">
-        <div class="panel-heading">People Want to Borrow</div>
-        <div class="panel-body">
-          <div class="list-group">
-            <button *ngFor="let book of booksRequestedFromOthers; let i = index;" class="list-group-item" type="button" class="list-group-item" (click)="processRequest(book)">
-              ID: {{ book.bookId }}
-            </button>
-          </div>
-        </div>
-      </div>      
-    </div>
-    
-  </div>
-  
-  <hr>
   
   <div class="row text-center">
     <h2 class="current-books-title">Your Book Collection</h2>
