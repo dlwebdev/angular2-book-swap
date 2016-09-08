@@ -105,16 +105,25 @@ export class TradesComponent implements OnInit {
       }
     }
     
+    proposeBookTrade(book:object) {
+      // You have accepted the offer to trade the book they've requested in return for this book
+      this.currentMessage.message = "I will accept your trade request for my book: " + this.currentTradeDetails.book.name + 
+        " in return for your book titled: " + book.name + ". Let's set up an exchange.";
+        
+      this.sendMessage();
+    }
+    
     deleteTrade() {
       // Delete the trade and send the user a message that the trade was declined.
       this.tradesService.deleteTrade(this.currentTradeDetails.trade._id)
             .subscribe(
               trade => {
                 console.log("Removed trade: ", trade);
-                this.getTradesRequestedFromOthers();                
               },
               error =>  this.errorMessage = <any>error
             );       
+      
+      this.getTradesRequestedFromOthers();
       
       this.currentMessage.message = "Thanks for your trade request, but I'm not interested in that book at the moment.";
       this.sendMessage();

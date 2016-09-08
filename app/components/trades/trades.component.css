@@ -76,3 +76,7 @@ input {
 .glyphicon-random {
   color: #dc143c;
 }
+
+.bold {
+  font-weight: bold;
+}

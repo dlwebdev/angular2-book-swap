@@ -9,7 +9,7 @@
 
     <div class="col-md-6">
       <div class="panel panel-info">
-        <div class="panel-heading">Your Trade Requests</div>
+        <div class="panel-heading">Books You Want From Others</div>
         <div class="panel-body">
           <div class="list-group">
             <button *ngFor="let trade of yourTradeDetails; let i = index;" class="list-group-item" type="button" class="list-group-item" (click)="loadRequestDetails(trade, 'receiving')">
@@ -22,7 +22,7 @@
     
     <div class="col-md-6">
       <div class="panel panel-success">
-        <div class="panel-heading">Trades Offered to You</div>
+        <div class="panel-heading">Books Others Want From You</div>
         <div class="panel-body">
           <div class="list-group">
             <button *ngFor="let trade of othersTradeDetails; let i = index;" class="list-group-item" type="button" class="list-group-item" (click)="loadRequestDetails(trade, 'sending')">
@@ -41,12 +41,12 @@
     <h2 class="current-books-title text-center">Trade Details</h2>
     
     <div class="trade-details">
-        <div *ngIf="youRequestedCurrentTrade">
-            <p>You have requested to trade {{ currentTradeDetails.book.name }}. Send them a message about this trade.</p>
+        <div *ngIf="youRequestedCurrentTrade" class="text-center">
+            <p>Send this user a message about the book you have requested titled: {{ currentTradeDetails.book.name }}</p>
         </div>
         
         <div *ngIf="otherRequestedCurrentTrade" class="text-center">
-            <p>A trade has been proposed for: {{ currentTradeDetails.book.name }}.</p>
+            <p>A trade has been proposed for: <span class="bold">{{ currentTradeDetails.book.name }}</span>.</p>
             <p>Here are this users books that you can choose from.</p>
             <p>Click on <span class="glyphicon glyphicon-random" aria-hidden="true"></span> to complete the trade. You may also choose to send them a message.</p>
             
