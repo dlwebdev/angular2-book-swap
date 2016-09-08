@@ -16675,10 +16675,22 @@ $__System.registerDynamic("a", ["3", "10", "7", "11", "12", "13"], true, functio
             this.router = router;
             this.user = {};
             this.isLoggedIn = false;
+            this.actionResultText = '';
+            this.currentTradeDetails = {};
+            this.youRequestedCurrentTrade = false;
+            this.otherRequestedCurrentTrade = false;
+            this.tradeDetailsClicked = false;
             this.tradesYouRequested = [];
             this.yourTradeDetails = [];
             this.tradesRequestedFromOthers = [];
             this.othersTradeDetails = [];
+            this.currentMessage = {};
+            this.currentMessage = {
+                fromUser: '',
+                toUser: '',
+                title: '',
+                message: ''
+            };
         }
         TradesComponent.prototype.ngOnInit = function () {
             this.checkIfLoggedIn();
@@ -16698,9 +16710,38 @@ $__System.registerDynamic("a", ["3", "10", "7", "11", "12", "13"], true, functio
                 return _this.errorMessage = error;
             });
         };
-        TradesComponent.prototype.loadRequestDetails = function (book, tradeType) {
-            console.log("Book involved in trade: ", book);
+        TradesComponent.prototype.loadRequestDetails = function (trade, tradeType) {
+            console.log("Trade: ", trade);
             console.log("Trade Type: ", tradeType);
+            if (tradeType === 'receiving') {
+                // you are requesting someone else's book
+                this.otherRequestedCurrentTrade = false;
+                this.youRequestedCurrentTrade = true;
+                this.currentMessage.toUser = trade.book.userId;
+                this.currentMessage.title = "Trade for your book: " + trade.book.name;
+                this.currentMessage.message = "I'm interested in making a trade for: " + trade.book.name + ". Please let me know if you'd be interested in any of my books.";
+            } else {
+                // someone is requesting a book you 
+                this.youRequestedCurrentTrade = false;
+                this.otherRequestedCurrentTrade = true;
+                this.currentMessage.toUser = trade.trade.userIdRequesting;
+                this.currentMessage.title = "Regarding your request for: " + trade.book.name;
+                this.currentMessage.message = "I understand that you want to trade for " + trade.book.name + ". I will take a look at your collection and offer a trade.";
+            }
+            this.currentTradeDetails = trade;
+            this.tradeDetailsClicked = true;
+        };
+        TradesComponent.prototype.sendMessage = function () {
+            var _this = this;
+            // The from user id will always be the user logged in
+            this.currentMessage.fromUser = this.user._id;
+            console.log("Will send this message: ", this.currentMessage);
+            // Use messageService to create a new message from this.
+            this.messagesService.sendMessage(this.currentMessage).subscribe(function (message) {
+                _this.actionResultText = "Your message has been sent";
+            }, function (error) {
+                return _this.errorMessage = error;
+            });
         };
         TradesComponent.prototype.getTradesYouRequested = function () {
             var _this = this;
@@ -16717,7 +16758,6 @@ $__System.registerDynamic("a", ["3", "10", "7", "11", "12", "13"], true, functio
             var _loop_1 = function (i) {
                 var curTrade = trades[i];
                 this_1.booksService.getBook(curTrade.bookId).subscribe(function (book) {
-                    //console.log("Pushing book onto booksYouRequested. Book: ", book);
                     _this.yourTradeDetails.push({
                         'trade': curTrade,
                         'book': book
@@ -16730,7 +16770,6 @@ $__System.registerDynamic("a", ["3", "10", "7", "11", "12", "13"], true, functio
             for (var i = 0; i < trades.length; i++) {
                 _loop_1(i);
             }
-            console.log("this.yourTradeDetails object: ", this.yourTradeDetails);
         };
         TradesComponent.prototype.getTradesRequestedFromOthers = function () {
             var _this = this;
@@ -16747,7 +16786,6 @@ $__System.registerDynamic("a", ["3", "10", "7", "11", "12", "13"], true, functio
             var _loop_2 = function (i) {
                 var curTrade = trades[i];
                 this_2.booksService.getBook(curTrade.bookId).subscribe(function (book) {
-                    //console.log("Pushing book onto booksRequestedFromOthers. Book: ", book);
                     _this.othersTradeDetails.push({
                         trade: curTrade,
                         book: book
@@ -16760,7 +16798,6 @@ $__System.registerDynamic("a", ["3", "10", "7", "11", "12", "13"], true, functio
             for (var i = 0; i < trades.length; i++) {
                 _loop_2(i);
             }
-            console.log("this.othersTradeDetails object: ", this.othersTradeDetails);
         };
         TradesComponent.prototype.getMessagesFromUser = function () {
             var _this = this;
@@ -45931,6 +45968,15 @@ $__System.registerDynamic("11", ["3", "4a", "16", "47", "48", "49"], true, funct
             return this.http.get('/api/messages/from-user/' + userId).map(function (res) {
                 return res.json();
             }).catch(this.handleError);
+        };
+        MessagesService.prototype.sendMessage = function (message) {
+            var headers = new http_1.Headers({
+                'Content-Type': 'application/json' });
+            return this.http.post('/api/messages/', JSON.stringify(message), {
+                headers: headers
+            }).map(function (res) {
+                return res.json();
+            });
         };
         MessagesService.prototype.deleteMessage = function (id) {
             return this.http.delete('/api/messages/' + id).map(function (res) {

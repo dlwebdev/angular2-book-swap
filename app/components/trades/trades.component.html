@@ -9,7 +9,7 @@
 
     <div class="col-md-6">
       <div class="panel panel-info">
-        <div class="panel-heading">You Requested to Borrow</div>
+        <div class="panel-heading">Your Trade Requests</div>
         <div class="panel-body">
           <div class="list-group">
             <button *ngFor="let trade of yourTradeDetails; let i = index;" class="list-group-item" type="button" class="list-group-item" (click)="loadRequestDetails(trade, 'receiving')">
@@ -22,7 +22,7 @@
     
     <div class="col-md-6">
       <div class="panel panel-success">
-        <div class="panel-heading">People Want to Borrow</div>
+        <div class="panel-heading">Trades Offered to You</div>
         <div class="panel-body">
           <div class="list-group">
             <button *ngFor="let trade of othersTradeDetails; let i = index;" class="list-group-item" type="button" class="list-group-item" (click)="loadRequestDetails(trade, 'sending')">
@@ -42,12 +42,22 @@
     
     <div class="trade-details">
         <div *ngIf="youRequestedCurrentTrade">
-            <p>You are requesting to borrow {{ currentTradeDetails.book.name }}. Send them a message about this trade.</p>
+            <p>You have requested to trade {{ currentTradeDetails.book.name }}. Send them a message about this trade.</p>
         </div>
         
         <div *ngIf="otherRequestedCurrentTrade">
-            <p>Somebody wants to borrow {{ currentTradeDetails.book.name }}. Send them a message about this trade.</p>
+            <p>Somebody wants to trade {{ currentTradeDetails.book.name }}. Click on one of their books to propose a trade or send them a message about this trade.</p>
+            
+            <p>
+                <b>SHOW USERS BOOKS HERE.</b> 
+                This way you can just choose one of their books and click a process trade button. This will swap the owners of the book and send message to the other user 
+                letting them know the trade has been accepted and you need to set up an arrangment to make the trade.
+            </p>            
         </div>        
+        
+        <br><br>
+        
+        <h2 class="text-center">Send a Message Regarding Trade</h2>
         
         <form>
           <div class="form-group">
@@ -59,7 +69,11 @@
             <textarea class="form-control" [(ngModel)]="currentMessage.message" [ngModelOptions]="{standalone: true}" id="messageBody" placeholder="Message Body" rows="3"></textarea>
           </div>          
           <button (click)="sendMessage()" type="submit" class="btn btn-primary">Send Message</button>
-        </form>         
+        </form>     
+        
+        <div *ngIf="actionResultText !== ''">
+            {{ actionResultText }}
+        </div>
         
         <p>Send a message to the user with userId in book object.</p>
         

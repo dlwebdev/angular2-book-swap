@@ -15,6 +15,7 @@ import { BooksService } from "../services/books.service";
 export class TradesComponent implements OnInit {
     user: object = {};
     isLoggedIn: boolean = false;
+    actionResultText: string = '';
     
     currentTradeDetails: object = {};
     youRequestedCurrentTrade: boolean = false;
@@ -98,6 +99,13 @@ export class TradesComponent implements OnInit {
       console.log("Will send this message: ", this.currentMessage);
       
       // Use messageService to create a new message from this.
+      this.messagesService.sendMessage(this.currentMessage)
+            .subscribe(
+              message => {
+                this.actionResultText = "Your message has been sent";
+              },
+              error =>  this.errorMessage = <any>error
+            );        
     }
     
     getTradesYouRequested() {

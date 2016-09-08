@@ -22,7 +22,16 @@ export class MessagesService {
     return this.http.get('/api/messages/from-user/' + userId)
                 .map((res: Response) => res.json())
                 .catch(this.handleError);     
-  }    
+  }   
+  
+  sendMessage(message:Object): Observable<string[]> {
+    let headers = new Headers({
+      'Content-Type': 'application/json'});
+
+    return this.http.post('/api/messages/', JSON.stringify(message), {
+      headers: headers
+    }).map((res) => res.json());
+  }  
   
   deleteMessage(id:string): Observable<string[]> {
     return this.http.delete('/api/messages/' + id)
