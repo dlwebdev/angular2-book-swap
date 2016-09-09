@@ -14,6 +14,7 @@ import { BooksService } from "../services/books.service";
 export class MyBooksComponent implements OnInit {
     searchTitle: string = '';
     searchResults: any = [];
+    userLoggedIn: boolean = false;
     
     usersCurrentBooks: any = [];
     
@@ -34,6 +35,7 @@ export class MyBooksComponent implements OnInit {
                     this.user = user;
                     
                     if(this.user._id) {
+                      this.userLoggedIn = true;
                       this.getUsersBooks();
                     }
                     else {
@@ -42,7 +44,7 @@ export class MyBooksComponent implements OnInit {
                 },
                 error =>  this.errorMessage = <any>error
             );      
-    }   
+    }  
     
     searchForBook() {
         this.booksService.searchForBooks(this.searchTitle)

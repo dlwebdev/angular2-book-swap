@@ -60,8 +60,9 @@ app.get('/loginFailure', function(req, res, next) {
 });
 
 app.get('/loginSuccess', function(req, res, next) {
-  //res.send('Successfully authenticated');
+  // Login was successful
   res.json(req.user);
+  //res.redirect('/#/my-books');
 });
 
 

@@ -17070,14 +17070,16 @@ $__System.registerDynamic("b", ["3", "11", "7", "12"], true, function ($__requir
         }
         LoginComponent.prototype.loginUser = function () {
             var _this = this;
+            console.log("Logging user in...");
             this.usersService.loginUser(this.user).subscribe(function (user) {
                 _this.user = user;
+                console.log("Logged user in");
                 if (!_this.user._id) {
                     // show error message, could not log you in.
                     _this.loginFailureMessage = "Incorrect Credentials";
                 } else {
                     // send to my-books
-                    //this.router.navigate(['/my-books']);
+                    _this.router.navigate(['/my-books']);
                     document.location = "/#/my-books";
                 }
             }, function (error) {
@@ -17179,10 +17181,12 @@ $__System.registerDynamic("16", ["3", "7", "12"], true, function ($__require, ex
     var router_1 = $__require("7");
     var users_service_1 = $__require("12");
     var NavbarComponent = function () {
-        function NavbarComponent(usersService) {
+        function NavbarComponent(usersService, router) {
             this.usersService = usersService;
+            this.router = router;
             this.user = '';
             this.userLoggedIn = false;
+            console.log("NAVBAR IS BEING RETRIGGERED!");
         }
         NavbarComponent.prototype.ngOnInit = function () {
             this.checkIfLoggedIn();
@@ -17191,11 +17195,12 @@ $__System.registerDynamic("16", ["3", "7", "12"], true, function ($__require, ex
             var _this = this;
             // If the user is logged in it will return the user object, otherwise will redirect to login
             this.usersService.getCurrentUser().subscribe(function (user) {
-                //console.log('Current User response: ', user);
+                console.log('Current User response: ', user);
                 _this.user = user;
                 if (_this.user._id) {
-                    console.log("Logged in, show books");
                     _this.userLoggedIn = true;
+                } else {
+                    console.log("NOT LOGGED IN??");
                 }
             }, function (error) {
                 return _this.errorMessage = error;
@@ -17209,7 +17214,7 @@ $__System.registerDynamic("16", ["3", "7", "12"], true, function ($__require, ex
             templateUrl: 'components/navbar/navbar.component.html',
             styleUrls: ['components/navbar/navbar.component.css'],
             directives: [router_1.ROUTER_DIRECTIVES]
-        }), __metadata('design:paramtypes', [users_service_1.UsersService])], NavbarComponent);
+        }), __metadata('design:paramtypes', [users_service_1.UsersService, router_1.Router])], NavbarComponent);
         return NavbarComponent;
     }();
     exports.NavbarComponent = NavbarComponent;
@@ -25918,6 +25923,7 @@ $__System.registerDynamic("f", ["3", "11", "7", "12", "14"], true, function ($__
             this.router = router;
             this.searchTitle = '';
             this.searchResults = [];
+            this.userLoggedIn = false;
             this.usersCurrentBooks = [];
             this.booksYouRequested = [];
             this.booksRequestedFromOthers = [];
@@ -25931,6 +25937,7 @@ $__System.registerDynamic("f", ["3", "11", "7", "12", "14"], true, function ($__
             this.usersService.getCurrentUser().subscribe(function (user) {
                 _this.user = user;
                 if (_this.user._id) {
+                    _this.userLoggedIn = true;
                     _this.getUsersBooks();
                 } else {
                     _this.router.navigate(['/login']);

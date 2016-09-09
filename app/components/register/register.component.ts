@@ -32,8 +32,8 @@ export class RegisterComponent implements OnInit {
               res => {
                 this.regStatus = res.registered;
                 if(res.registered) {
-                    // redirect to my-books
-                    this.router.navigate(['/my-books']);
+                    // Successfully registered. Log them in
+                    this.loginUser();
                 } else {
                     this.registerFailureMessage = "Error registering";
                 }
@@ -41,5 +41,22 @@ export class RegisterComponent implements OnInit {
               error =>  this.errorMessage = <any>error
             );        
     }
+    
+    loginUser() {
+        this.usersService.loginUser(this.user)
+            .subscribe(
+              user => {
+                this.user = user;
+                
+                if(!this.user._id) {
+                    // show error message, could not log you in.
+                    this.loginFailureMessage = "Incorrect Credentials";
+                } else {
+                    document.location = "/";
+                }
+              },
+              error =>  this.errorMessage = <any>error
+            );        
+    }     
     
 }

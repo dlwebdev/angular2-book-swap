@@ -33,7 +33,7 @@ export class LoginComponent {
                 } else {
                     // send to my-books
                     //this.router.navigate(['/my-books']);
-                    document.location = "/#/my-books";
+                    document.location = "/";
                 }
               },
               error =>  this.errorMessage = <any>error
