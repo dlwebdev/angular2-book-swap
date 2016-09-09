@@ -78,8 +78,8 @@ export class TradesComponent implements OnInit {
     }   
     
     loadRequestDetails(trade:object, tradeType:string) {
-      console.log("Trade: ", trade);
-      console.log("Trade Type: ", tradeType);
+      //console.log("Trade: ", trade);
+      //console.log("Trade Type: ", tradeType);
       
       this.currentTradeDetails = trade;
       this.tradeDetailsClicked = true;      
@@ -120,7 +120,7 @@ export class TradesComponent implements OnInit {
         this.currentMessage.title = "Regarding your request for: " + trade.book.name;
         this.currentMessage.message = "I understand that you want to trade for " + trade.book.name + ". I will take a look at your collection and offer a trade."; 
         
-        console.log("this.currentTradeDetails.trade: ", this.currentTradeDetails.trade);
+        //console.log("this.currentTradeDetails.trade: ", this.currentTradeDetails.trade);
         
         this.loadUsersBooks(this.currentTradeDetails.trade.userIdRequesting);
       }
@@ -198,7 +198,7 @@ export class TradesComponent implements OnInit {
       this.tradesService.deleteTrade(this.currentTradeDetails.trade._id)
             .subscribe(
               trade => {
-                console.log("Removed trade: ", trade);
+                //console.log("Removed trade: ", trade);
               },
               error =>  this.errorMessage = <any>error
             );       
@@ -224,7 +224,7 @@ export class TradesComponent implements OnInit {
       // The from user id will always be the user logged in
       this.currentMessage.fromUser = this.user._id;
       
-      console.log("Will send this message: ", this.currentMessage);
+      //console.log("Will send this message: ", this.currentMessage);
       
       // Use messageService to create a new message from this.
       this.messagesService.sendMessage(this.currentMessage)

@@ -50,13 +50,10 @@ export class AllBooksComponent implements OnInit {
     }  
     
     requestBook(book:object) {
-        console.log("User with id of " + this.user._id + " is requesting this book: ", book);
-         
         this.booksService.requestBook(book, this.user._id)
             .subscribe(
               res => {
-                console.log("Result from book being requested: ", res);
-                this.router.navigate(['/my-books']);
+                this.router.navigate(['/trades']);
               },
               error =>  this.errorMessage = <any>error
             );         

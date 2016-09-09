@@ -16838,9 +16838,9 @@ $__System.registerDynamic("a", ["3", "11", "7", "13", "12", "14", "15"], true, f
             });
         };
         TradesComponent.prototype.loadRequestDetails = function (trade, tradeType) {
+            //console.log("Trade: ", trade);
+            //console.log("Trade Type: ", tradeType);
             var _this = this;
-            console.log("Trade: ", trade);
-            console.log("Trade Type: ", tradeType);
             this.currentTradeDetails = trade;
             this.tradeDetailsClicked = true;
             if (tradeType === 'receiving') {
@@ -16866,7 +16866,7 @@ $__System.registerDynamic("a", ["3", "11", "7", "13", "12", "14", "15"], true, f
                 this.currentMessage.toUser = trade.trade.userIdRequesting;
                 this.currentMessage.title = "Regarding your request for: " + trade.book.name;
                 this.currentMessage.message = "I understand that you want to trade for " + trade.book.name + ". I will take a look at your collection and offer a trade.";
-                console.log("this.currentTradeDetails.trade: ", this.currentTradeDetails.trade);
+                //console.log("this.currentTradeDetails.trade: ", this.currentTradeDetails.trade);
                 this.loadUsersBooks(this.currentTradeDetails.trade.userIdRequesting);
             }
         };
@@ -16921,7 +16921,7 @@ $__System.registerDynamic("a", ["3", "11", "7", "13", "12", "14", "15"], true, f
             var _this = this;
             // Delete the trade and send the user a message that the trade was declined.
             this.tradesService.deleteTrade(this.currentTradeDetails.trade._id).subscribe(function (trade) {
-                console.log("Removed trade: ", trade);
+                //console.log("Removed trade: ", trade);
             }, function (error) {
                 return _this.errorMessage = error;
             });
@@ -16942,7 +16942,7 @@ $__System.registerDynamic("a", ["3", "11", "7", "13", "12", "14", "15"], true, f
             var _this = this;
             // The from user id will always be the user logged in
             this.currentMessage.fromUser = this.user._id;
-            console.log("Will send this message: ", this.currentMessage);
+            //console.log("Will send this message: ", this.currentMessage);
             // Use messageService to create a new message from this.
             this.messagesService.sendMessage(this.currentMessage).subscribe(function (message) {
                 _this.actionResultText = "Your message has been sent";
@@ -17070,17 +17070,15 @@ $__System.registerDynamic("b", ["3", "11", "7", "12"], true, function ($__requir
         }
         LoginComponent.prototype.loginUser = function () {
             var _this = this;
-            console.log("Logging user in...");
             this.usersService.loginUser(this.user).subscribe(function (user) {
                 _this.user = user;
-                console.log("Logged user in");
                 if (!_this.user._id) {
                     // show error message, could not log you in.
                     _this.loginFailureMessage = "Incorrect Credentials";
                 } else {
                     // send to my-books
-                    _this.router.navigate(['/my-books']);
-                    document.location = "/#/my-books";
+                    //this.router.navigate(['/my-books']);
+                    document.location = "/";
                 }
             }, function (error) {
                 return _this.errorMessage = error;
@@ -17139,10 +17137,24 @@ $__System.registerDynamic("d", ["3", "11", "7", "12"], true, function ($__requir
             this.usersService.registerUser(this.user).subscribe(function (res) {
                 _this.regStatus = res.registered;
                 if (res.registered) {
-                    // redirect to my-books
-                    _this.router.navigate(['/my-books']);
+                    // Successfully registered. Log them in
+                    _this.loginUser();
                 } else {
                     _this.registerFailureMessage = "Error registering";
+                }
+            }, function (error) {
+                return _this.errorMessage = error;
+            });
+        };
+        RegisterComponent.prototype.loginUser = function () {
+            var _this = this;
+            this.usersService.loginUser(this.user).subscribe(function (user) {
+                _this.user = user;
+                if (!_this.user._id) {
+                    // show error message, could not log you in.
+                    _this.loginFailureMessage = "Incorrect Credentials";
+                } else {
+                    document.location = "/";
                 }
             }, function (error) {
                 return _this.errorMessage = error;
@@ -17186,7 +17198,7 @@ $__System.registerDynamic("16", ["3", "7", "12"], true, function ($__require, ex
             this.router = router;
             this.user = '';
             this.userLoggedIn = false;
-            console.log("NAVBAR IS BEING RETRIGGERED!");
+            //console.log("NAVBAR IS BEING RETRIGGERED!");
         }
         NavbarComponent.prototype.ngOnInit = function () {
             this.checkIfLoggedIn();
@@ -17207,7 +17219,7 @@ $__System.registerDynamic("16", ["3", "7", "12"], true, function ($__require, ex
             });
         };
         NavbarComponent.prototype.setLoggedInStatus = function () {
-            console.log("Get logged in status so we know whether or not to show My Books section, etc.");
+            //console.log("Get logged in status so we know whether or not to show My Books section, etc.");
         };
         NavbarComponent = __decorate([core_1.Component({
             selector: 'my-navbar',
@@ -17278,10 +17290,8 @@ $__System.registerDynamic("e", ["3", "11", "7", "14", "12"], true, function ($__
         };
         AllBooksComponent.prototype.requestBook = function (book) {
             var _this = this;
-            console.log("User with id of " + this.user._id + " is requesting this book: ", book);
             this.booksService.requestBook(book, this.user._id).subscribe(function (res) {
-                console.log("Result from book being requested: ", res);
-                _this.router.navigate(['/my-books']);
+                _this.router.navigate(['/trades']);
             }, function (error) {
                 return _this.errorMessage = error;
             });

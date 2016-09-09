@@ -15,7 +15,7 @@ export class NavbarComponent implements OnInit {
     errorMessage: string;
 
     constructor(private usersService: UsersService, private router: Router) {
-      console.log("NAVBAR IS BEING RETRIGGERED!");
+      //console.log("NAVBAR IS BEING RETRIGGERED!");
     }	
     
     ngOnInit() {
@@ -42,7 +42,7 @@ export class NavbarComponent implements OnInit {
     }  
     
     setLoggedInStatus() {
-        console.log("Get logged in status so we know whether or not to show My Books section, etc.");
+        //console.log("Get logged in status so we know whether or not to show My Books section, etc.");
     } 
 
 }

@@ -17,7 +17,17 @@ router.get('/current-user', function(req, res, next) {
   if (req.isAuthenticated()) {
     User.find({'_id': req.user._id}, function (err, user) {
       if(err) console.log('Err: ', err);
-      res.json({"_id": user[0]._id,"username": user[0].username});
+      
+      res.json(
+        {
+          "_id": user[0]._id,
+          "username": user[0].username,
+          "state": user[0].state,
+          "city": user[0].city,
+          "lastname": user[0].lastname,
+          "firstname": user[0].firstname
+        }
+      );
     });    
   } 
   else {
@@ -44,7 +54,7 @@ router.put('/', function(req, res) {
 });
 
 router.post('/register', function(req, res) {
-  console.log("Registering User: ", req.body);
+  //console.log("Registering User: ", req.body);
   
   User.findOne({ 'username' : req.body.username }, function(err, user) {
     if(err) console.log('Err: ', err);
@@ -90,7 +100,7 @@ router.post('/register', function(req, res) {
 
 router.get('/login',
   function(req, res){
-    console.log("LOGIN ROUTE!!");
+    //console.log("LOGIN ROUTE!!");
     //res.render('login');
   });
   
